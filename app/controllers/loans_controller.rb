@@ -11,7 +11,14 @@ class LoansController < ApplicationController
 
   def new
     #@loan = Loan.new
-    @loan = session[:loan] ? Loan.new(session[:loan]) : Loan.new
+    #@loan = session[:loan] ? Loan.new(session[:loan]) : Loan.new
+    if session[:loan]
+      @loan = Loan.new(session[:loan])
+    else
+      @loan = Loan.new
+      @loan.payments_per_year = 12
+      @loan.interest_rate = "5.000"
+    end
   end
 
   def edit

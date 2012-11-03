@@ -7,21 +7,21 @@
 <div class="span-7 append-1">
   <div class="field">
     <%= f.label :asset_price %><br />
-    <%= f.text_field :asset_price, :class => "text span-7" %>
+    <%= f.text_field :asset_price, :class => "text span-7", :value => number_with_precision(f.object.asset_price, :precision => 2) %>
   </div>
   <div class="field">
     <%= f.label :down_payment %><br />
-    <%= f.text_field :down_payment, :class => "text span-7" %>
+    <%= f.text_field :down_payment, :class => "text span-7", :value => number_with_precision(f.object.down_payment, :precision => 2) %>
   </div>
   <div class="field">
     <%= f.label :payments_per_year %><br />
-    <%= f.text_field :payments_per_year, :value => "12", :class => "text span-7" %>
+    <%= f.text_field :payments_per_year, :class => "text span-7" %>
   </div>
 </div>
 <div class="span-7 append-1">
   <div class="field">
     <%= f.label :interest_rate %><br />
-    <%= f.text_field :interest_rate, :value => "5.000", :class => "text span-7" %>
+    <%= f.text_field :interest_rate, :class => "text span-7", :value => number_with_precision(f.object.interest_rate, :precision => 3) %>
   </div>
   <div class="field">
     <%= f.label :years %><br />
@@ -29,13 +29,13 @@
   </div>
   <div class="field">
     <%= f.label :escrow_payment %><br />
-    <%= f.text_field :escrow_payment, :class => "text span-7" %>
+    <%= f.text_field :escrow_payment, :class => "text span-7", :value => number_with_precision(f.object.escrow_payment, :precision => 2) %>
   </div>
 </div>
 <div class="span-7 last">
   <div class="field">
     <%= f.label :planned_payment %><br />
-    <%= f.text_field :planned_payment, :class => "text span-7" %>
+    <%= f.text_field :planned_payment, :class => "text span-7", :value => number_with_precision(f.object.planned_payment, :precision => 2) %>
   </div>
   <div class="field">
     <%= f.label :first_payment %><br />
