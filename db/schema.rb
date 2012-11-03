@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121101182737) do
+ActiveRecord::Schema.define(:version => 20121103112214) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.string   "resource_id",   :null => false
@@ -52,6 +52,21 @@ ActiveRecord::Schema.define(:version => 20121101182737) do
     t.string   "uid"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "loans", :force => true do |t|
+    t.integer  "user_id"
+    t.decimal  "asset_price",       :precision => 10, :scale => 2
+    t.decimal  "down_payment",      :precision => 10, :scale => 2
+    t.integer  "payments_per_year"
+    t.decimal  "interest_rate",     :precision => 10, :scale => 3
+    t.integer  "years"
+    t.decimal  "escrow_payment",    :precision => 10, :scale => 2
+    t.decimal  "planned_payment",   :precision => 10, :scale => 2
+    t.date     "first_payment"
+    t.datetime "created_at",                                       :null => false
+    t.datetime "updated_at",                                       :null => false
+    t.string   "name"
   end
 
   create_table "pages", :force => true do |t|

@@ -1,0 +1,45 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Asset price:</b>
+  <%= @loan.asset_price %>
+</p>
+
+<p>
+  <b>Downpayment:</b>
+  <%= @loan.down_payment %>
+</p>
+
+<p>
+  <b>Payments per year:</b>
+  <%= @loan.payments_per_year %>
+</p>
+
+<p>
+  <b>Interest rate:</b>
+  <%= @loan.interest_rate %>
+</p>
+
+<p>
+  <b>Years:</b>
+  <%= @loan.years %>
+</p>
+
+<p>
+  <b>Escrow payment:</b>
+  <%= @loan.escrow_payment %>
+</p>
+
+<p>
+  <b>Planned payment:</b>
+  <%= @loan.planned_payment %>
+</p>
+
+<p>
+  <b>First payment:</b>
+  <%= @loan.first_payment %>
+</p>
+
+
+<%= link_to 'Edit', edit_loan_path(@loan) %> |
+<%= link_to 'Back', loans_path %>

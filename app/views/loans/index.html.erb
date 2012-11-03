@@ -1,0 +1,41 @@
+<% title "My Loans"  %>
+
+<table>
+<thead>
+  <tr>
+    <th>Name</th>
+    <th>Asset price</th>
+    <th>Down payment</th>
+    <th>Payments per year</th>
+    <th>Interest rate</th>
+    <th>Years</th>
+    <th>Escrow payment</th>
+    <th>Planned payment</th>
+    <th>First payment</th>
+    <th></th>
+    <th></th>
+  </tr>
+</thead>
+
+<tbody>
+<% @loans.each do |loan| %>
+  <tr>
+    <td><%= link_to loan.name, edit_loan_path(loan) %></td>
+    <td><%= loan.asset_price %></td>
+    <td><%= loan.down_payment %></td>
+    <td><%= loan.payments_per_year %></td>
+    <td><%= loan.interest_rate %></td>
+    <td><%= loan.years %></td>
+    <td><%= loan.escrow_payment %></td>
+    <td><%= loan.planned_payment %></td>
+    <td><%= loan.first_payment %></td>
+    <td><%= link_to 'Show', loan %></td>
+    <td><%= link_to 'Destroy', loan, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+
+<br />
+
+<%= link_to 'New Loan', new_loan_path %>

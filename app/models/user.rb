@@ -1,16 +1,16 @@
 class User < ActiveRecord::Base
   validates :username, :presence => true, :uniqueness => true
+  attr_accessor :login
+  attr_accessible :email, :password, :password_confirmation, :username, :login, :remember_me
+
+  has_many :authentications, :dependent => :destroy
+  has_many :loans, :dependent => :destroy
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :lockable, :timeoutable, :confirmable and :activatable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
          :authentication_keys => [:login]
-
-  has_many :authentications, :dependent => :destroy
-
-  attr_accessor :login
-  attr_accessible :email, :password, :password_confirmation, :username, :login, :remember_me
 
   def self.find_first_by_auth_conditions(warden_conditions)
     conditions = warden_conditions.dup

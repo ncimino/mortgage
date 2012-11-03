@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  asset_price: 
+  downpayment: 
+  payments_per_year: 
+  interest_rate: 
+  years: 
+  escrow_payment: 
+  planned_payment: 
+  first_payment: 2012-11-03
+
+two:
+  asset_price: 
+  downpayment: 
+  payments_per_year: 
+  interest_rate: 
+  years: 
+  escrow_payment: 
+  planned_payment: 
+  first_payment: 2012-11-03

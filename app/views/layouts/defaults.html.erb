@@ -8,8 +8,10 @@
 <% content_for :header do %>
     <nav class="span-24 append-bottom">
       <ul>
+        <%= link_to '<li class="left hover">Home</li>'.html_safe, new_loan_path %>
         <%= render :partial => "pages/links", :collection => @display_pages.topbar, :as => :page, :locals => {:classes => "left hover"} %>
         <% if user_signed_in? %>
+            <%= link_to '<li class="left hover">My Loans</li>'.html_safe, loans_path %>
             <%= link_to '<li class="left hover">Account</li>'.html_safe, edit_user_registration_path %>
             <%= link_to '<li class="right hover">Sign out</li>'.html_safe, destroy_user_session_path, :method => :delete %>
             <li class="right last lighter"><%= current_user.email %></li>
