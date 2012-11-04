@@ -1,4 +1,4 @@
-<div class="left span-9">
+<div class="left span-10 append-1 prepend-1 colborder">
   <h2>Edit <%= resource_name.to_s.humanize %></h2>
 
   <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => {:method => :put}) do |f| %>
@@ -18,9 +18,11 @@
 
       <p><%= f.submit "Update" %></p>
   <% end %>
+
+  <%= link_to "Back", :back %>
 </div>
 
-<div class="left span-9 last">
+<div class="left span-10 append-1 prepend-1 last">
   <%= render 'shared/open_auth' %>
   <p>To use another provider to logon, click the provider you want to use.</p>
   <br />
@@ -34,10 +36,12 @@
   </p>
 </div>
 
-<h3 class="clear">Cancel my account</h3>
+<div class="left span-20 prepend-1 last">
+    <hr class="space" />
 
-<p>Want to delete your user and all associated
-  information? <%= link_to "Cancel my account", registration_path(resource_name), :confirm => "Are you sure?", :method => :delete %>
-  .</p>
+    <h3 class="clear">Cancel my account</h3>
 
-<%= link_to "Back", :back %>
+    <p>Want to delete your user and all associated
+      information? <%= link_to "Cancel my account", registration_path(resource_name), :confirm => "Are you sure?", :method => :delete %>
+      .</p>
+</div>
