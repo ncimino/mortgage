@@ -7,16 +7,17 @@ Mortgage::Application.routes.draw do
 
   get 'sessions/new'
   get "registrations/new"
-  get "registrations/edit"
+  get "registrations/calculator"
   get "authentications/index"
   get "authentications/create"
   get "authentications/destroy"
 
+  match "loans/calculations", :via => :get
   match '/auth/failure' => 'authentications#failure'
   match '/auth/:provider/callback' => 'authentications#create'
 
   resources :pages, :only => :show
-  resources :loans
+  resources :loans, :except => :show
 
   root :to => 'loans#new', :id => 0
 

@@ -29,8 +29,8 @@ class LoansControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should get edit" do
-    get :edit, id: @loan
+  test "should get calculator" do
+    get :calculator, id: @loan
     assert_response :success
   end
 

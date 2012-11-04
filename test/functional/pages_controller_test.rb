@@ -29,8 +29,8 @@ class PagesControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should get edit" do
-    get :edit, id: @page
+  test "should get calculator" do
+    get :calculator, id: @page
     assert_response :success
   end
 

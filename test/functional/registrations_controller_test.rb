@@ -1,8 +1,8 @@
 require 'test_helper'
 
 class RegistrationsControllerTest < ActionController::TestCase
-  test "should get edit" do
-    get :edit
+  test "should get calculator" do
+    get :calculator
     assert_response :success
   end
 
