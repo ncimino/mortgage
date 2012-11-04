@@ -8,7 +8,6 @@ Mortgage::Application.routes.draw do
   get 'sessions/new'
   get "registrations/new"
   get "registrations/edit"
-  #resources :authentications
   get "authentications/index"
   get "authentications/create"
   get "authentications/destroy"
