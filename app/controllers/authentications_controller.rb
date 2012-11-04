@@ -32,14 +32,14 @@ class AuthenticationsController < ApplicationController
   end
 
   def destroy
-    if ( current_user.authentications.count == 1 && current_user.encrypted_password.empty? )
+    if current_user.authentications.count == 1 && current_user.encrypted_password.empty?
       flash[:error] = "You must first set a password on the <a href=\"#{edit_user_registration_path}\">preferences page</a>".html_safe
     else
       @authentication = current_user.authentications.find(params[:id])
       @authentication.destroy
       flash[:success] = "Successfully destroyed authentication."
     end
-    redirect_to authentications_url
+    redirect_to edit_user_registration_path
   end
 
   protected

@@ -1,5 +1,6 @@
 class Authentication < ActiveRecord::Base
 
+  attr_accessible :provider, :uid, :user_id
   belongs_to :user
 
   def provider_name
@@ -11,5 +12,5 @@ class Authentication < ActiveRecord::Base
       provider.titleize
     end
   end
-  attr_accessible :provider, :uid, :user_id
+
 end
