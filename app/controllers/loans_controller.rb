@@ -28,11 +28,9 @@ class LoansController < ApplicationController
   def create
     if user_signed_in?
       @loan = current_user.loans.new(params[:loan])
-      if @loan.save
-        redirect_to @loan, notice: 'Loan was successfully created.'
-      else
-        render action: "new"
-      end
+      flash[:notice] = 'Loan was successfully created.' if @loan.save
+      render action: "edit"
+      session[:loan] = nil
     else
       session[:loan] = params[:loan]
       redirect_to user_session_path, notice: 'You must be signed in to save.'
@@ -42,10 +40,9 @@ class LoansController < ApplicationController
   def update
     @loan = current_user.loans.find(params[:id])
     if @loan.update_attributes(params[:loan])
-      redirect_to @loan, notice: 'Loan was successfully updated.'
-    else
-      render action: "edit"
+      flash[:notice] = 'Loan was successfully updated.'
     end
+    render action: "edit"
   end
 
   def destroy
