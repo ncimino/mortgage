@@ -13,7 +13,7 @@ function normalize_money (value) {
 $(document).ready(function(){
     $("#loan_asset_price").focus().change(function() {
         var down_payment = normalize_money($(this).val()) * 0.2
-        var asset_price = $(this).val() * 1.0
+        if ($(this).val() == "") { var asset_price = $(this).val() * 1.0 }
         if (asset_price < 150000) { year = 5 } else { year = "30" }
         auto_fill("#loan_down_payment", down_payment.toFixed(2));
         auto_fill("#loan_asset_price", asset_price.toFixed(2), true);
