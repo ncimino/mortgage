@@ -1,10 +1,10 @@
 class LoansController < ApplicationController
-  before_filter :authenticate_user!, :except => [:new, :create, :calculations]
+  before_filter :authenticate_user!, :except => [:new, :create, :summary]
 
-  def calculations
+  def summary
     #params[:loan][:id].delete
     @loan = Loan.new(params[:loan])
-    render :partial => "calculations"
+    render :partial => "summary"
   end
 
   def index
@@ -18,6 +18,7 @@ class LoansController < ApplicationController
       @loan = Loan.new
       @loan.payments_per_year = 12
       @loan.interest_rate = "5.000"
+      @loan.escrow_payment = "0.00"
     end
     render "calculator"
   end

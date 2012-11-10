@@ -15,7 +15,7 @@
         <% end %>
       </div>
     </div>
-    <div class="span-7 prepend-1 append-1">
+    <div class="span-7 prepend-1">
       <div class="field">
         <%= f.label :asset_price %>
         <br/>
@@ -27,7 +27,7 @@
         <%= f.text_field :down_payment, :class => "text span-7", :value => number_with_precision(f.object.down_payment, :precision => 2) %>
       </div>
     </div>
-    <div class="span-7 append-1">
+    <div class="span-7 prepend-1">
       <div class="field">
         <%= f.label :interest_rate %>
         <br/>
@@ -44,12 +44,7 @@
         <%= f.text_field :planned_payment, :class => "text span-7", :value => number_with_precision(f.object.planned_payment, :precision => 2) %>
       </div>
     </div>
-    <div class="span-7 last">
-      <div class="field">
-        <%= f.label :first_payment %>
-        <br/>
-        <%= f.date_select :first_payment, :class => "text span-7" %>
-      </div>
+    <div class="span-7 prepend-1 last">
       <div class="field">
         <%= f.label :years %>
         <br/>
@@ -59,6 +54,12 @@
         <%= f.label :payments_per_year %>
         <br/>
         <%= f.text_field :payments_per_year, :class => "text span-7" %>
+      </div>
+      <div class="field">
+        <%= f.label :first_payment %>
+        <br/>
+        <%# f.date_select :first_payment, {}, :class => "text" %>
+        <%= f.text_field :first_payment, :class => "text span-6" %>
       </div>
     </div>
 <% end %>

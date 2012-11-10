@@ -12,7 +12,7 @@ Mortgage::Application.routes.draw do
   get "authentications/create"
   get "authentications/destroy"
 
-  match "loans/calculations", :via => :get
+  match "loans/summary", :via => :get
   match '/auth/failure' => 'authentications#failure'
   match '/auth/:provider/callback' => 'authentications#create'
 

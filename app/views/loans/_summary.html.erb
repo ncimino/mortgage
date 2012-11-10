@@ -1,0 +1,57 @@
+<%= form_for(@loan) do |f| %>
+    <div class="span-9 prepend-1">
+      <fieldset>
+        <legend>Payments</legend>
+        <div class="field">
+          <%= f.label :actual_payment, "Payment (w/o escrow: #{number_to_currency(@loan.loan_payment)})" %>
+          <br/>
+          <%= f.text_field :actual_payment, :class => "title", :value => number_with_precision(f.object.actual_payment, :precision => 2) %>
+        </div>
+        <div class="field">
+          <%= f.label :last_payment, "Last payment instead of #{number_to_currency(@loan.planned_payment)}" %>
+          <br/>
+          <%= f.text_field :last_payment, :class => "title", :value => number_with_precision(f.object.last_payment, :precision => 2) %>
+        </div>
+        <hr class="space"/>
+        <div class="field">
+          <%= f.label :expected_payments, "Number of expected payments" %>
+          <br/>
+          <%= f.text_field :expected_payments, :class => "title" %>
+        </div>
+        <div class="field">
+          <%= f.label :actual_payments %>
+          <br/>
+          <%= f.text_field :actual_payments, :value => number_with_precision(f.object.actual_payments, :precision => 0), :class => "title" %>
+        </div>
+      </fieldset>
+    </div>
+    <div class="span-8 prepend-1">
+      <fieldset class="span-8">
+        <legend>Timeframe</legend>
+        <div class="field">
+          <%= f.label :payoff_date %>
+          <br/>
+          <%# f.date_select :payoff_date, {}, :class => "title" %>
+          <%= f.text_field :payoff_date, :class => "title" %>
+        </div>
+        <div class="field">
+          <%= f.label :payoff_time %>
+          <br/>
+          <%= f.text_field :payoff_time, :class => "title" %>
+        </div>
+      </fieldset>
+      <fieldset class="span-8">
+        <legend>Totals</legend>
+        <div class="field">
+          <%= f.label :loan_amount %>
+          <br/>
+          <%= f.text_field :loan_amount, :class => "title", :value => number_with_precision(f.object.loan_amount, :precision => 2) %>
+        </div>
+        <div class="field">
+          <%= f.label :total_interest %>
+          <br/>
+          <%= f.text_field :total_interest, :class => "title", :value => number_with_precision(f.object.total_interest, :precision => 2) %>
+        </div>
+      </fieldset>
+    </div>
+<% end %>

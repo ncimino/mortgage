@@ -80,6 +80,15 @@ nav a {
     text-decoration: none;
 }
 
+.ui-datepicker-trigger {
+    cursor: pointer;
+    padding: 5px;
+}
+
+td h3 {
+    margin-bottom: 0;
+}
+
 header nav {
     background-color: black;
     border-bottom: 2px solid lightgray;

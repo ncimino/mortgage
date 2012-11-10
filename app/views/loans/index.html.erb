@@ -3,16 +3,17 @@
 <table>
 <thead>
   <tr>
-    <th>Name</th>
-    <th>Asset price</th>
-    <th>Down payment</th>
-    <th>Payments per year</th>
-    <th>Interest rate</th>
-    <th>Years</th>
-    <th>Escrow payment</th>
-    <th>Planned payment</th>
-    <th>First payment</th>
-    <th></th>
+    <th>Loan</th>
+    <th>Asset Price</th>
+    <!--<th>Down payment</th>-->
+    <!--<th>Payments per year</th>-->
+    <!--<th>Interest rate</th>-->
+    <!--<th>Years</th>-->
+    <!--<th>Escrow payment</th>-->
+    <th>Planned Payment</th>
+    <th>Actual Payment</th>
+    <th>Time Left</th>
+    <!--<th>First payment</th>-->
     <th></th>
   </tr>
 </thead>
@@ -20,22 +21,22 @@
 <tbody>
 <% @loans.each do |loan| %>
   <tr>
-    <td><%= link_to loan.name, edit_loan_path(loan) %></td>
-    <td><%= loan.asset_price %></td>
-    <td><%= loan.down_payment %></td>
-    <td><%= loan.payments_per_year %></td>
-    <td><%= loan.interest_rate %></td>
-    <td><%= loan.years %></td>
-    <td><%= loan.escrow_payment %></td>
-    <td><%= loan.planned_payment %></td>
-    <td><%= loan.first_payment %></td>
-    <td><%= link_to 'Show', loan %></td>
-    <td><%= link_to 'Destroy', loan, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    <td><%= link_to loan.name, loan_path(loan), :class => "edit-loan-button" %></td>
+    <td><h3><%= number_to_currency(loan.asset_price) %></h3></td>
+    <!--<td><%= number_to_currency(loan.down_payment) %></td>-->
+    <!--<td><%= loan.payments_per_year %></td>-->
+    <!--<td><%= loan.interest_rate %></td>-->
+    <!--<td><%= loan.years %></td>-->
+    <!--<td><%= loan.escrow_payment %></td>-->
+    <td><h3><%= number_to_currency(loan.planned_payment) %></h3></td>
+    <td><h3><%= number_to_currency(loan.actual_payment) %></h3></td>
+    <td><h3 class="alt"><%= distance_of_time_in_words(Time.now, loan.payoff_date.to_time) %></h3></td>
+    <!--<td><%= loan.first_payment %></td>-->
+    <td><%= link_to 'Delete', loan, method: :delete, data: { confirm: 'Are you sure?' }, :class => "delete-loan-button" %></td>
   </tr>
 <% end %>
 </tbody>
 </table>
 
 <br />
-
-<%= link_to 'New Loan', new_loan_path %>
+<button type="button" class="new-loan-button" title="Create" formaction="<%= new_loan_path %>">New Loan</button>

@@ -28,13 +28,9 @@ class Loan < ActiveRecord::Base
   end
 
   def last_payment
-    if rate and loan_amount and actual_payments and real_payment
+    if rate and loan_amount and real_payment
       last_payment = loan_amount * ( 1 + rate ) ** actual_payments - ( real_payment / rate ) * ( ( 1 + rate ) ** actual_payments - 1 )
-      if last_payment > 0
-        last_payment
-      else
-        nil
-      end
+      last_payment + real_payment
     end
   end
 
@@ -44,24 +40,36 @@ class Loan < ActiveRecord::Base
 
   def actual_payments
     if rate and loan_amount and real_payment
-      (-1 * Math.log( 1 - rate * loan_amount / real_payment) / Math.log( 1 + rate) ).to_int #.ceil
+      begin
+        number_of_payments = (-1 * Math.log( 1 - rate * loan_amount / real_payment) / Math.log( 1 + rate) ).ceil
+        (number_of_payments > 0) ? number_of_payments : 0
+      rescue
+        0
+      end
     end
   end
 
   def payoff_time
-    if actual_payments
-      years = actual_payments / 12
-      months = actual_payments % 12
+    if actual_payments and payments_per_year
+      years = actual_payments / payments_per_year
+      months = actual_payments % payments_per_year * 12 / payments_per_year
       "#{ pluralize(years, "year") } and #{ pluralize(months, "month") }"
     end
   end
 
   def payoff_date
-    first_payment + actual_payments.months if first_payment and actual_payments
+    first_payment + (actual_payments * 12 / payments_per_year).months if first_payment and actual_payments
   end
 
   def actual_payment
     loan_payment + escrow_payment if loan_payment and escrow_payment
+  end
+
+  def total_interest
+    if planned_payment and actual_payments and last_payment and loan_amount
+      interest = planned_payment * ( actual_payments - 1 ) + last_payment - loan_amount
+      (interest > 0) ? interest : 0
+    end
   end
 
 end
