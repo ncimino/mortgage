@@ -31,14 +31,22 @@ $(document).ready(function(){
 //        $(this).prev("input.text").val('');
 //        $(this).prev("div").children("input.text").val('');
 //    });
+    $(".back-button").click( function() {
+        window.location.href = $(this).attr('formaction');
+    }).button({
+        icons: { primary: "ui-icon-arrowreturnthick-1-w" }
+    });
+    $(".save-button").button({
+        icons: { primary: "ui-icon-disk" }
+    });
     $("input").live("change",function(event){
-        $("#save").attr("src", "/assets/document_alt_fill_24x32.png");
+        $(".alert-save").addClass("ui-state-error");
         $.get('/loans/calculations', $(this).parents("form:first").serialize(),
             function(data) {
                 $("#loan_calculated").html(data)
                 $("#loan_calculated").stop().css("background-color", "#FFFF9C")
                     .animate({ backgroundColor: "#FFFFFF"}, 1500);
             });
-    })
+    });
 });
 

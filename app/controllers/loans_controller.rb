@@ -22,6 +22,11 @@ class LoansController < ApplicationController
     render "calculator"
   end
 
+  def show
+    @loan = current_user.loans.find(params[:id])
+    render "calculator"
+  end
+
   def edit
     @loan = current_user.loans.find(params[:id])
     render "calculator"

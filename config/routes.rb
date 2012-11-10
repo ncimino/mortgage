@@ -17,7 +17,7 @@ Mortgage::Application.routes.draw do
   match '/auth/:provider/callback' => 'authentications#create'
 
   resources :pages, :only => :show
-  resources :loans, :except => :show
+  resources :loans #, :except => :show
 
   root :to => 'loans#new', :id => 0
 

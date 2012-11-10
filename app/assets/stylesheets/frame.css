@@ -13,10 +13,6 @@ a {
     border: 3px outset gray;
 }
 
-.ui-icon-grip-solid-horizontal {
-    cursor: move;
-}
-
 .debug_dump {
     clear: both;
     background-color: #e9967a;
@@ -29,29 +25,6 @@ a {
     display: initial;
     font-style: italic;
     color: #8A1F11;
-}
-
-.list {
-    background-color: #EEE;
-    border-top: 2px dotted #888;
-    padding: 1px 3px;
-}
-
-li.ui-state-highlight {
-    display: block;
-    height: 2em;
-    list-style-type: none;
-}
-
-.item {
-    list-style-type: none;
-    padding: 3px;
-    margin-bottom: 1px;
-}
-
-.list-action {
-    margin: 3px 5px;
-    top: 0;
 }
 
 .lighter {
@@ -67,9 +40,11 @@ nav ul {
     padding: 0 0.5em;
 }
 
-h1 {
-    /*font-family: Livory-RegularItalic;*/
-    /*font-family: Georgia,Palatino,Times,"MS Serif",serif;*/
+.alt {
+    color: #666;
+    font-family: "Warnock Pro", "Goudy Old Style","Palatino","Book Antiqua", Georgia, serif;
+    font-style: italic;
+    font-weight: normal;
 }
 
 aside nav ul li {
