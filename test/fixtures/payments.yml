@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  loan_id: 1
+  first: 1
+  last: 1
+  recurrs: 1
+  amount: 9.99
+
+two:
+  loan_id: 1
+  first: 1
+  last: 1
+  recurrs: 1
+  amount: 9.99

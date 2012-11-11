@@ -8,6 +8,7 @@ class Loan < ActiveRecord::Base
   attr_accessible :asset_price, :down_payment, :escrow_payment, :first_payment, :interest_rate, :payments_per_year, :planned_payment, :years, :name
 
   belongs_to :user
+  has_many :payments
 
   def loan_amount
      asset_price - down_payment if asset_price and down_payment
