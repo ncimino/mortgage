@@ -1,10 +1,15 @@
 class LoansController < ApplicationController
-  before_filter :authenticate_user!, :except => [:new, :create, :summary]
+  before_filter :authenticate_user!, :except => [:new, :create, :summary, :schedule]
 
   def summary
-    #params[:loan][:id].delete
     @loan = Loan.new(params[:loan])
     render :partial => "summary"
+  end
+
+  def schedule
+    @loan = Loan.new(params[:loan]);
+    #@schedule = @loan.schedule;
+    render :partial => "schedule"
   end
 
   def index
@@ -19,17 +24,20 @@ class LoansController < ApplicationController
       @loan.payments_per_year = 12
       @loan.interest_rate = "5.000"
       @loan.escrow_payment = "0.00"
+      @loan.first_payment = Time.now.to_date
     end
     render "calculator"
   end
 
   def show
     @loan = current_user.loans.find(params[:id])
+    #@schedule = @loan.schedule
     render "calculator"
   end
 
   def edit
     @loan = current_user.loans.find(params[:id])
+    #@schedule = @loan.schedule
     render "calculator"
   end
 

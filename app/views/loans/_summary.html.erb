@@ -8,7 +8,7 @@
           <%= f.text_field :actual_payment, :class => "title", :value => number_with_precision(f.object.actual_payment, :precision => 2) %>
         </div>
         <div class="field">
-          <%= f.label :last_payment, "Last payment instead of #{number_to_currency(@loan.planned_payment)}" %>
+          <%= f.label :last_payment, "Last payment instead of #{number_to_currency(@loan.planned_payment)}<br /> (w/o escrow #{number_to_currency(@loan.last_loan_payment)})".html_safe %>
           <br/>
           <%= f.text_field :last_payment, :class => "title", :value => number_with_precision(f.object.last_payment, :precision => 2) %>
         </div>

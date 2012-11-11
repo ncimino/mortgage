@@ -51,7 +51,7 @@ $(document).ready(function(){
     });
     $(function() {
         $( "#loan_first_payment" ).datepicker({
-            showOn: "button",
+            showOn: "both",
             buttonImage: "/assets/calendar.png",
             buttonImageOnly: true,
             changeMonth: true,
@@ -80,13 +80,20 @@ $(document).ready(function(){
     $("input").live("change",function(event){
         $(".alert-save").addClass("ui-state-error");
 
-    $.get('/loans/summary', $(this).parents("form:first").serialize(),
+    $.get('/loans/schedule', $(this).parents("form:first").serialize(),
         function(data) {
-            $("#loan_summary").html(data)
-            $("#tabs input").stop().css("background-color", "#FFFF9C")
+            $("#loan_schedule").html(data)
+            $("#tabs #loan_schedule table").stop().css("background-color", "#FFFF9C")
                 .animate({ backgroundColor: "#FFFFFF"}, 1500);
         });
 
-});
+    $.get('/loans/summary', $(this).parents("form:first").serialize(),
+        function(data) {
+            $("#loan_summary").html(data)
+            $("#tabs #loan_summary input").stop().css("background-color", "#FFFF9C")
+                .animate({ backgroundColor: "#FFFFFF"}, 1500);
+        });
+
+    });
 });
 

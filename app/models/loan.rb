@@ -28,9 +28,13 @@ class Loan < ActiveRecord::Base
   end
 
   def last_payment
-    if rate and loan_amount and real_payment
-      last_payment = loan_amount * ( 1 + rate ) ** actual_payments - ( real_payment / rate ) * ( ( 1 + rate ) ** actual_payments - 1 )
-      last_payment + real_payment
+    last_loan_payment + escrow_payment if last_loan_payment
+  end
+
+  def last_loan_payment
+    if rate and loan_amount and real_payment and actual_payments
+      actual_last_payment = loan_amount * ( 1 + rate ) ** actual_payments - ( real_payment / rate ) * ( ( 1 + rate ) ** actual_payments - 1 )
+      actual_last_payment + real_payment
     end
   end
 
@@ -58,7 +62,7 @@ class Loan < ActiveRecord::Base
   end
 
   def payoff_date
-    first_payment + (actual_payments * 12 / payments_per_year).months if first_payment and actual_payments
+    first_payment + (actual_payments * 12 / payments_per_year - 1).months if first_payment and actual_payments
   end
 
   def actual_payment
@@ -70,6 +74,32 @@ class Loan < ActiveRecord::Base
       interest = planned_payment * ( actual_payments - 1 ) + last_payment - loan_amount
       (interest > 0) ? interest : 0
     end
+  end
+
+  def schedule
+    if loan_amount and actual_payments and planned_payment and rate and escrow_payment and payments_per_year
+    schedule = [{:date => "-", :total => loan_amount, :to_principle => 0, :interest => 0, :payment => 0, :escrow => 0}]
+    date = first_payment - 1.month
+    total = loan_amount
+    (1..actual_payments).each do |i|
+      #interest = number_with_precision(total * rate, :precision => 2)
+      interest = total * rate
+      escrow = escrow_payment
+      total_w_additions = total + interest + escrow
+      payment = (planned_payment > total_w_additions) ? total_w_additions : planned_payment
+      date += (12 / payments_per_year).months
+      to_principle = payment - interest - escrow
+      total -= to_principle
+      schedule += [
+        {:date => date, :total => total, :to_principle => to_principle, :interest => interest, :payment => payment, :escrow => escrow}
+      ];
+    end
+    schedule
+    end
+  end
+
+  def schedule_available?
+    loan_amount and actual_payments and planned_payment and rate and escrow_payment and payments_per_year
   end
 
 end
