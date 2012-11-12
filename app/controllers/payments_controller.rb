@@ -3,29 +3,39 @@ class PaymentsController < ApplicationController
 
   def index
     @payments = Payment.all
+    render :partial => "payments"
   end
 
   def new
-    @payment = Payment.new
+    @loan = Loan.find(params[:loan_id])
+    @payment = @loan.payments.new
+
+    #@payment = Payment.new
+    render :partial => "form"
   end
 
   def show
-    @payment = Payment.find(params[:id])
+    @loan = Loan.find(params[:loan_id])
+    @payment = Payment.new
+    @payments = @loan.payments
+    #@payment = Payment.find(params[:id])
+    render :partial => "payments"
   end
 
   def edit
     @payment = Payment.find(params[:id])
+    render :partial => "form"
   end
 
   def create
     if user_signed_in?
-      @payment = Payment.new(params[:loan][:payment])
-      flash[:notice] = 'Loan was successfully created.' if @loan.save
-      render "calculator"
-      session[:loan] = nil
+      #@payment = Payment.new(params[:loan])
+      #flash[:notice] = 'Loan was successfully created.' if @loan.save
+      render :partial => "form"
+      #session[:loan] = nil
     else
-      session[:loan] = params[:loan]
-      redirect_to user_session_path, notice: 'You must be signed in to save.'
+      #session[:loan] = params[:loan]
+      #redirect_to user_session_path, notice: 'You must be signed in to save.'
     end
   end
 

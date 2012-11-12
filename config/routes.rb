@@ -14,7 +14,7 @@ Mortgage::Application.routes.draw do
 
   match 'loans/summary', :via => :get
   match 'loans/schedule', :via => :get
-  match 'loans/payments', :via => :get
+  #match 'loans/payments', :via => :get
   match '/auth/failure' => 'authentications#failure'
   match '/auth/:provider/callback' => 'authentications#create'
 
@@ -23,7 +23,7 @@ Mortgage::Application.routes.draw do
     resource :payments
   end
 
-  match 'loans/:id/new_payment_form', :via => :get
+  #match 'loans/:id/new_payment_form', :via => :get
 
   root :to => 'loans#new', :id => 0
 
