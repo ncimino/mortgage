@@ -7,31 +7,31 @@
 <table>
   <thead>
   <tr>
-    <th></th>
+    <!--<th></th>-->
     <th>Date</th>
     <!--<th>To Principle</th>-->
     <th>Interest</th>
     <th>Escrow</th>
     <th>Payment</th>
-    <th></th>
+    <!--<th></th>-->
   </tr>
   </thead>
 
   <tbody>
-  <% i = -1 %>
+  <%# i = -1 %>
   <% @payments.each do |payment| %>
   <tr>
-    <%= form_for [@loan, payment] do |form| %>
-    <%= fields_for payment do |f| %>
-      <td><%= i += 1 %></td>
-      <td><%= f.text_field :date, line[:date] %></td>
+    <%#= form_for [@loan, payment] do |form| %>
+    <%#= fields_for payment do |f| %>
+      <!--<td><%#= i += 1 %></td>-->
+      <td><%#= f.text_field :date %><%= payment.date %></td>
       <!--<td><%# number_to_currency line[:to_principle] %></td>-->
-        <td><%= f.text_field :interest, line[:interest] %></td>
-        <td><%= f.text_field :escrow, line[:escrow] %></td>
-        <td><%= f.text_field :amount, line[:payment] %></td>
-      <td><button>Set</button></td>
-    <% end %>
-    <% end %>
+        <td><%#= f.text_field :interest %><%= payment.interest %></td>
+        <td><%#= f.text_field :escrow %><%= payment.escrow %></td>
+        <td><%#= f.text_field :amount %><%= payment.amount %></td>
+      <!--<td><button>Set</button></td>-->
+    <%# end %>
+    <%# end %>
   </tr>
   <% end %>
   </tbody>

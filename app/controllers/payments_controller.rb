@@ -16,18 +16,23 @@ class PaymentsController < ApplicationController
 
   def show
     @loan = Loan.find(params[:loan_id])
-    @payment = Payment.new
+    #@payment = Payment.new
+    @payment = @loan.payments.new
     @payments = @loan.payments
     #@payment = Payment.find(params[:id])
     render :partial => "payments"
   end
 
   def edit
-    @payment = Payment.find(params[:id])
+    @loan = Loan.find(params[:loan_id])
+    #@payment = Payment.find(params[:id])
+    @payment = @loan.payments.find(params[:id])
     render :partial => "form"
   end
 
   def create
+    @loan = Loan.find(params[:loan_id])
+    @payment = @loan.payments.new
     if user_signed_in?
       #@payment = Payment.new(params[:loan])
       #flash[:notice] = 'Loan was successfully created.' if @loan.save

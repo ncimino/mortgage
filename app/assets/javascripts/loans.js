@@ -19,6 +19,10 @@ function spinner() {
 
 function load(path, id,force) {
     if (force || !$(id).hasClass("ui-tabs-hide")) {
+//        $.ajax(
+//            url: path,
+//            type:
+//        );
         $.get(path, $("#loan_fundamentals").children("form").serialize(),
             function (data) {
                 $(id).html(data)
@@ -96,12 +100,19 @@ $(document).ready(function () {
     $('li a[href="#loan_payments"]').click(function () {
         $("#loan_payments").prepend(spinner());
 //        load("payments",true);
-        load(window.location.href+"/payments","#loan_payments",true);
+//        load(window.location.href+"/payments","#loan_payments",true);
+        $.get(window.location.href+"/payments/",
+            function (data) {
+                $("#loan_payments").html(data)
+                buttonize();
+            }).error(function(req,status,msg) {
+                $("#loan_payments").html("<h3 class='error'>An error occurred</h3><h4>"+msg+"</h4>");
+            });
     });
     $('li a[href="#loan_schedule"]').click(function () {
         $("#loan_schedule").prepend(spinner());
 //        load("schedule",true);
-        load("/loans/schedule","#loan_schedule",true);
+        load("schedule","#loan_schedule",true);
     });
     $('li a[href="#loan_summary"]').click(function () {
         $("#loan_summary").prepend(spinner());
@@ -110,7 +121,7 @@ $(document).ready(function () {
     });
     $("#loan_fundamentals input").live("change", function (event) {
         $(".alert-save").addClass("ui-state-error");
-        load("/loans/payments","#loan_payments");
+        load(window.location.href + "/payments","#loan_payments");
         load("/loans/schedule","#loan_schedule");
         load("/loans/summary","#loan_summary");
     });
@@ -140,7 +151,7 @@ $(document).ready(function () {
             }
         },
         close: function() {
-            $.get(window.location.href + '/new_payment_form', function (data) {
+            $.get(window.location.href + '/payments', function (data) {
                 $(this).html(data)
             });
         }
