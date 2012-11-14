@@ -61,6 +61,57 @@ function buttonize() {
     });
 }
 
+function create_payment_form() {
+    $( "#new-payment-form" ).dialog({
+        autoOpen: false,
+        height: 355,
+        width: 385,
+        modal: true,
+        buttons: {
+            "Add a payment": function() {
+//                alert(amount);
+//                alert($("#new_payment").serialize());
+//                $.post(window.location.href + '/payments', $("#new_payment").children("form").serialize(),
+                $.post(window.location.href + '/payments', $("#new_payment").serialize(),
+//                $.post(window.location.href + '/payments/new', $("#new_payment").serialize(),
+                    function (data) {
+                        $("#new-payment-form").dialog( "close" );
+//                        load("payments");
+                        load(window.location.href+"/payments","#loan_payments",true);
+                        buttonize();
+                        alert("success");
+                        return false
+                    }).error(function(req,status,msg) {
+                        $("#new-payment-form").html("<h3 class='error'>An error occurred</h3><h4>"+msg+"</h4>");
+                    });
+//                $.ajax({
+//                    type: 'POST',
+//                    url: window.location.href + '/payments',
+//                    data: $("#new_payment").serialize(),
+//                    success: function (data) {
+//                        $("#new-payment-form").dialog( "close" );
+////                        load("payments");
+//                        load(window.location.href+"/payments","#loan_payments",true);
+//                        buttonize();
+//                    }
+//                }).error(function(req,status,msg) {
+//                    $("#new-payment-form").html("<h3 class='error'>An error occurred</h3><h4>"+msg+"</h4>");
+//                });
+            },
+            Cancel: function() {
+                $( this ).dialog( "close" );
+            }
+        },
+        close: function() {
+            $.get(window.location.href + '/payments/new', function (data) {
+//                $("#new-payment-form-container").html(data)
+                $("#new-payment-form").html(data)
+//                create_payment_form
+            });
+        }
+    });
+}
+
 $(document).ready(function () {
     $("#loan_asset_price").focus().change(function () {
         auto_fill("#loan_down_payment", fix_decimal($(this).val() * 0.2, 2));
@@ -99,62 +150,34 @@ $(document).ready(function () {
     buttonize();
     $('li a[href="#loan_payments"]').click(function () {
         $("#loan_payments").prepend(spinner());
-//        load("payments",true);
+        load("/loans/payments","#loan_payments",true);
 //        load(window.location.href+"/payments","#loan_payments",true);
-        $.get(window.location.href+"/payments/",
-            function (data) {
-                $("#loan_payments").html(data)
-                buttonize();
-            }).error(function(req,status,msg) {
-                $("#loan_payments").html("<h3 class='error'>An error occurred</h3><h4>"+msg+"</h4>");
-            });
+//        $.get(window.location.href+"/payments/",
+//            function (data) {
+//                $("#loan_payments").html(data)
+//                buttonize();
+//            }).error(function(req,status,msg) {
+//                $("#loan_payments").html("<h3 class='error'>An error occurred</h3><h4>"+msg+"</h4>");
+//            });
     });
     $('li a[href="#loan_schedule"]').click(function () {
         $("#loan_schedule").prepend(spinner());
-//        load("schedule",true);
-        load("schedule","#loan_schedule",true);
+        load("/loans/schedule","#loan_schedule",true);
     });
     $('li a[href="#loan_summary"]').click(function () {
         $("#loan_summary").prepend(spinner());
-//        load("summary",true);
         load("/loans/summary","#loan_summary",true);
     });
     $("#loan_fundamentals input").live("change", function (event) {
         $(".alert-save").addClass("ui-state-error");
-        load(window.location.href + "/payments","#loan_payments");
+//        load(window.location.href + "/payments","#loan_payments");
+        load("/loans/payments","#loan_payments");
         load("/loans/schedule","#loan_schedule");
         load("/loans/summary","#loan_summary");
     });
 //    $("#new-payment").live("click", function (event) {
 //        alert('click');
 //    });
-    $( "#new-payment-form" ).dialog({
-        autoOpen: false,
-        height: 355,
-        width: 385,
-        modal: true,
-        buttons: {
-            "Add a payment": function() {
-//                alert(amount);
-                $.post(window.location.href + '/payments', $("#new_payment").children("form").serialize(),
-                    function (data) {
-                        $("#new-payment-form").dialog( "close" );
-//                        load("payments");
-                        load(window.location.href+"/payments","#loan_payments",true);
-                        buttonize();
-                    }).error(function(req,status,msg) {
-                        $("#new-payment-form").html("<h3 class='error'>An error occurred</h3><h4>"+msg+"</h4>");
-                    });
-            },
-            Cancel: function() {
-                $( this ).dialog( "close" );
-            }
-        },
-        close: function() {
-            $.get(window.location.href + '/payments', function (data) {
-                $(this).html(data)
-            });
-        }
-    });
+    create_payment_form();
 });
 

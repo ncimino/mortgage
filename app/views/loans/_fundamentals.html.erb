@@ -1,6 +1,7 @@
 <%= form_for(@loan) do |f| %>
     <%= render 'shared/error_messages', :object => f.object %>
     <div class="span-24">
+      <%= f.hidden_field :id %>
       <div class="field span-8 append-1">
         <%= f.label :name %>
         <br/>

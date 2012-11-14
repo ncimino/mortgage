@@ -3,40 +3,30 @@
   <hr class="space" />
 </div>
 
-<% if @loan.schedule_available? %>
+<% if @payments %>
 <table>
   <thead>
   <tr>
-    <th></th>
     <th>Date</th>
-    <!--<th>To Principle</th>-->
     <th>Interest</th>
     <th>Escrow</th>
     <th>Payment</th>
-    <th></th>
   </tr>
   </thead>
 
   <tbody>
-  <% i = -1 %>
-  <% @loan.payments.each do |payment| %>
+  <% @payments.each do |payment| %>
   <tr>
-    <%= form_for [@loan, payment] do |form| %>
-    <%= fields_for payment do |f| %>
-      <td><%= i += 1 %></td>
-      <td><%= f.text_field :date, line[:date] %></td>
-      <!--<td><%# number_to_currency line[:to_principle] %></td>-->
-        <td><%= f.text_field :interest, line[:interest] %></td>
-        <td><%= f.text_field :escrow, line[:escrow] %></td>
-        <td><%= f.text_field :amount, line[:payment] %></td>
-      <td><button>Set</button></td>
-    <% end %>
-    <% end %>
+    <td><%= payment.date %></td>
+    <td><%= payment.interest %></td>
+    <td><%= payment.escrow %></td>
+    <td><%= payment.amount %></td>
   </tr>
   <% end %>
   </tbody>
 
 </table>
+
 <% else %>
 <h2>Payments are not loaded, perhaps you need to enter more data</h2>
 <% end %>

@@ -1,5 +1,5 @@
 class LoansController < ApplicationController
-  before_filter :authenticate_user!, :except => [:new, :create, :summary, :schedule]
+  before_filter :authenticate_user!, :except => [:new, :create, :summary, :schedule, :payments]
 
   # Special
 
@@ -21,8 +21,25 @@ class LoansController < ApplicationController
   end
 
   def payments
-    @loan = Loan.new(params[:loan]);
+    if params[:id]
+      Rails.logger.debug "using id: "+params[:id].to_yaml
+      @loan = Loan.find(params[:id])
+    elsif params[:loan_id]
+      Rails.logger.debug "using loan_id: "+params[:loan_id].to_yaml
+      @loan = Loan.find(params[:loan_id])
+    elsif params[:loan]
+      Rails.logger.debug "using loan: "+params[:loan].to_yaml
+      @loan = Loan.find(params[:loan][:id])
+    elsif session[:loan]
+      Rails.logger.debug "using session: "+session[:loan].to_yaml
+      @loan = Loan.new(session[:loan])
+      #else
+    #  Rails.logger.debug "using id: "+params[:id].to_yaml
+    #  @loan = Loan.find(params[:id])
+    end
+    Rails.logger.debug @loan
     @payments = @loan.payments
+    Rails.logger.debug "loan payments: "+@payments.to_yaml
     @payment = Payment.new
     #@schedule = @loan.schedule;
     render :partial => "payments"
@@ -51,6 +68,7 @@ class LoansController < ApplicationController
   def show
     @loan = current_user.loans.find(params[:id])
     @payment = Payment.new
+    @payments = @loan.payments
     #@schedule = @loan.schedule
     render "calculator"
   end

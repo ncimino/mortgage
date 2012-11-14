@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
 
   def get_variables
     @display_pages = Page.order("ordinal")
+    #@payment = Payment.new()
   end
 
   protect_from_forgery

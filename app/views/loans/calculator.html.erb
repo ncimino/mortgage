@@ -15,13 +15,13 @@
       <%= render 'summary' %>
     </div>
     <div id="loan_schedule">
-      <!--<h3><img src="/assets/ui-anim_basic_16x16.gif">Loading...</h3>-->
       <%# render 'schedule' %>
     </div>
     <div id="loan_payments">
-      <!--<h3><img src="/assets/ui-anim_basic_16x16.gif">Loading...</h3>-->
-      <%# render 'payments' %>
+      <%= render 'payments' %>
     </div>
   </div>
-  <%= render 'payments/form' %>
+  <div id="new-payment-form-container">
+    <%= render 'payments/form' %>
+  </div>
 </div>

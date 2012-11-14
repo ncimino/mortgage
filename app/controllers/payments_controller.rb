@@ -1,60 +1,50 @@
 class PaymentsController < ApplicationController
   before_filter :authenticate_user!, :except => [:new, :create, :summary, :schedule]
+  before_filter :get_loan
+
+  def get_loan
+    @loan = Loan.find(params[:loan_id])
+  end
 
   def index
     @payments = Payment.all
-    render :partial => "payments"
   end
 
   def new
-    @loan = Loan.find(params[:loan_id])
-    @payment = @loan.payments.new
-
-    #@payment = Payment.new
-    render :partial => "form"
+    @payment = Payment.new
   end
 
   def show
-    @loan = Loan.find(params[:loan_id])
-    #@payment = Payment.new
-    @payment = @loan.payments.new
-    @payments = @loan.payments
-    #@payment = Payment.find(params[:id])
-    render :partial => "payments"
+    @payment = Payment.find(params[:id])
   end
 
   def edit
-    @loan = Loan.find(params[:loan_id])
-    #@payment = Payment.find(params[:id])
-    @payment = @loan.payments.find(params[:id])
-    render :partial => "form"
+    @payment = Payment.find(params[:id])
   end
 
   def create
     @loan = Loan.find(params[:loan_id])
-    @payment = @loan.payments.new
-    if user_signed_in?
-      #@payment = Payment.new(params[:loan])
-      #flash[:notice] = 'Loan was successfully created.' if @loan.save
-      render :partial => "form"
-      #session[:loan] = nil
+    @payment = @loan.payments.build(params[:payment])
+    if @payment.save
+      redirect_to loan_url(@payment.loan_id), notice: 'Payment was successfully created.'
     else
-      #session[:loan] = params[:loan]
-      #redirect_to user_session_path, notice: 'You must be signed in to save.'
+      render action: "new"
     end
   end
 
   def update
-    @loan = current_user.loans.find(params[:id])
-    if @loan.update_attributes(params[:loan])
-      flash[:notice] = 'Loan was successfully updated.'
+    @payment = Payment.find(params[:id])
+    if @payment.update_attributes(params[:payment])
+      redirect_to loan_url(@payment.loan_id), notice: 'Payment was successfully updated.'
+    else
+      render action: "edit"
     end
     render "calculator"
   end
 
   def destroy
-    @loan = current_user.loans.find(params[:id])
-    @loan.destroy
-    redirect_to loans_url
+    @payment = Payment.find(params[:id])
+    @payment.destroy
+    redirect_to loan_url(@payment.loan_id), notice: 'Payment was successfully destroyed.'
   end
 end
