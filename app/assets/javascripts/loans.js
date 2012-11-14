@@ -53,7 +53,7 @@ function buttonize() {
     $(".edit-loan-button").button({
         icons:{ primary:"ui-icon-pencil" }
     });
-    $(".delete-loan-button").button({
+    $(".delete-button").button({
         icons:{ primary:"ui-icon-trash" }
     });
     $("#new-payment-button").click(function() {
@@ -68,19 +68,21 @@ function create_payment_form() {
         width: 385,
         modal: true,
         buttons: {
-            "Add a payment": function() {
+            "Add payment": function() {
 //                alert(amount);
 //                alert($("#new_payment").serialize());
 //                $.post(window.location.href + '/payments', $("#new_payment").children("form").serialize(),
                 $.post(window.location.href + '/payments', $("#new_payment").serialize(),
 //                $.post(window.location.href + '/payments/new', $("#new_payment").serialize(),
                     function (data) {
-                        $("#new-payment-form").dialog( "close" );
+                        $("#new-payment-form").html( data );
+//                        console.debug(data)
+//                        $("#new-payment-form").dialog( "close" );
 //                        load("payments");
-                        load(window.location.href+"/payments","#loan_payments",true);
+//                        load(window.location.href+"/payments","#loan_payments",true);
                         buttonize();
-                        alert("success");
-                        return false
+//                        alert("success");
+//                        return false
                     }).error(function(req,status,msg) {
                         $("#new-payment-form").html("<h3 class='error'>An error occurred</h3><h4>"+msg+"</h4>");
                     });
@@ -98,7 +100,7 @@ function create_payment_form() {
 //                    $("#new-payment-form").html("<h3 class='error'>An error occurred</h3><h4>"+msg+"</h4>");
 //                });
             },
-            Cancel: function() {
+            "Done": function() {
                 $( this ).dialog( "close" );
             }
         },

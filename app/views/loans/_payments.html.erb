@@ -11,6 +11,7 @@
     <th>Interest</th>
     <th>Escrow</th>
     <th>Payment</th>
+    <th></th>
   </tr>
   </thead>
 
@@ -21,6 +22,7 @@
     <td><%= payment.interest %></td>
     <td><%= payment.escrow %></td>
     <td><%= payment.amount %></td>
+    <td><%# link_to 'Delete', [@loan,payment], method: :delete, data: { confirm: 'Are you sure?' }, :class => "delete-button" %></td>
   </tr>
   <% end %>
   </tbody>

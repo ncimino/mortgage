@@ -12,6 +12,7 @@ class PaymentsController < ApplicationController
 
   def new
     @payment = Payment.new
+    render :partial => "form"
   end
 
   def show
@@ -26,9 +27,12 @@ class PaymentsController < ApplicationController
     @loan = Loan.find(params[:loan_id])
     @payment = @loan.payments.build(params[:payment])
     if @payment.save
-      redirect_to loan_url(@payment.loan_id), notice: 'Payment was successfully created.'
+      #redirect_to loan_url(@payment.loan_id), notice: 'Payment was successfully created.'
+      @payment = Payment.new
+      render :partial => "form", notice: 'Payment was successfully created.'
     else
-      render action: "new"
+      #render action: "new"
+      render :partial => "form"
     end
   end
 

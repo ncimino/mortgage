@@ -40,6 +40,10 @@ a {
     padding-left: 5px;
 }
 
+.no-bullets {
+    list-style-type: none;
+}
+
 select {
     max-width: 40em;
 }
