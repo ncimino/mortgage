@@ -15,7 +15,7 @@
 <tbody>
 <% @loans.each do |loan| %>
   <tr>
-    <td><%= link_to loan.name, loan_path(loan), :class => "edit-loan-button" %></td>
+    <td><%= link_to loan.name, loan_path(loan), :class => "edit-button" %></td>
     <td><h3><%= number_to_currency(loan.asset_price) %></h3></td>
     <td><h3><%= number_to_currency(loan.planned_payment) %></h3></td>
     <td><h3><%= number_to_currency(loan.actual_payment) %></h3></td>

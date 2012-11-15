@@ -1,25 +1,24 @@
 class PaymentsController < ApplicationController
-  before_filter :authenticate_user!, :except => [:new, :create, :summary, :schedule]
-  before_filter :get_loan
-
-  def get_loan
-    @loan = Loan.find(params[:loan_id])
-  end
+  before_filter :authenticate_user!, :except => [:new, :create, :summary, :schedule, :summary]
 
   def index
+    @loan = Loan.find(params[:loan_id])
     @payments = Payment.all
   end
 
   def new
+    @loan = Loan.find(params[:loan_id])
     @payment = Payment.new
     render :partial => "form"
   end
 
   def show
+    @loan = Loan.find(params[:loan_id])
     @payment = Payment.find(params[:id])
   end
 
   def edit
+    @loan = Loan.find(params[:loan_id])
     @payment = Payment.find(params[:id])
   end
 
@@ -37,6 +36,7 @@ class PaymentsController < ApplicationController
   end
 
   def update
+    @loan = Loan.find(params[:loan_id])
     @payment = Payment.find(params[:id])
     if @payment.update_attributes(params[:payment])
       redirect_to loan_url(@payment.loan_id), notice: 'Payment was successfully updated.'
@@ -48,7 +48,11 @@ class PaymentsController < ApplicationController
 
   def destroy
     @payment = Payment.find(params[:id])
+    @loan = @payment.loan
+    @payments = @loan.payments
     @payment.destroy
-    redirect_to loan_url(@payment.loan_id), notice: 'Payment was successfully destroyed.'
+    render :partial => "loans/payments_main"
+    #redirect_to loan_url(@payment.loan_id), notice: 'Payment was successfully destroyed.'
+    #redirect_to @loan, notice: 'Payment was successfully destroyed.'
   end
 end

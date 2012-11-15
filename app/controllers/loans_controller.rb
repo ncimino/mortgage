@@ -25,14 +25,14 @@ class LoansController < ApplicationController
     render :partial => "schedule"
   end
 
-  def payments
+  def payments_main
     if params[:id]
       Rails.logger.debug "using id: "+params[:id].to_yaml
       @loan = Loan.find(params[:id])
     elsif params[:loan_id]
       Rails.logger.debug "using loan_id: "+params[:loan_id].to_yaml
       @loan = Loan.find(params[:loan_id])
-    elsif params[:loan][:id]
+    elsif params[:loan][:id] && !params[:loan][:id].empty?
       Rails.logger.debug "using loan id: "+params[:loan].to_yaml
       @loan = Loan.find(params[:loan][:id])
     elsif params[:loan]
@@ -51,7 +51,7 @@ class LoansController < ApplicationController
     Rails.logger.debug "loan payments: "+@payments.to_yaml
     @payment = Payment.new
     #@schedule = @loan.schedule;
-    render :partial => "payments"
+    render :partial => "payments_main"
   end
 
   # Regular

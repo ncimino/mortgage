@@ -1,7 +1,6 @@
 <% if object.errors.any? %>
   <div class="error">
-    <p>There were problems with the following fields:</p>
-    <ul>
+    <ul class="bottom">
     <% object.errors.full_messages.each do |msg| %>
       <li class="no-bullets"><%= msg %></li>
     <% end %>

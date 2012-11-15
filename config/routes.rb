@@ -14,15 +14,13 @@ Mortgage::Application.routes.draw do
 
   match '/loans/summary', :via => :get
   match '/loans/schedule', :via => :get
-  match '/loans/payments', :via => :get
+  match '/loans/payments_main', :via => :get
   match '/auth/failure' => 'authentications#failure'
   match '/auth/:provider/callback' => 'authentications#create'
 
-
   resources :pages, :only => :show
   resources :loans do
-    resources :payments
-    #, :shallow => true
+    resources :payments, :shallow => true
   end
 
   root :to => 'loans#new', :id => 0
