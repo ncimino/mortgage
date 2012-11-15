@@ -61,6 +61,19 @@ function buttonize() {
     });
 }
 
+function create_calendar() {
+    $(function () {
+        $("#loan_first_payment, #payment_date").datepicker({
+            showOn:"both",
+            buttonImage:"/assets/calendar.png",
+            buttonImageOnly:true,
+            changeMonth:true,
+            changeYear:true,
+            dateFormat:"yy-mm-dd"
+        });
+    });
+}
+
 function create_payment_form() {
     $( "#new-payment-form" ).dialog({
         autoOpen: false,
@@ -81,6 +94,8 @@ function create_payment_form() {
 //                        load("payments");
 //                        load(window.location.href+"/payments","#loan_payments",true);
                         buttonize();
+                        create_calendar();
+                        load("/loans/payments","#loan_payments");
 //                        alert("success");
 //                        return false
                     }).error(function(req,status,msg) {
@@ -128,28 +143,9 @@ $(document).ready(function () {
     $("#loan_years, #loan_payments_per_year").change(function () {
         $(this).val(fix_decimal(normalize_money($(this).val()), 0));
     });
-//    $("#reload").click(function() {
-//        set_domain_defaults($("#website_domain").val().toLowerCase(), true);
-//        set_name_defaults($("#website_name").val().toLowerCase(), true);
-//    });
-//    $(".clearfield").click(function() {
-//        $(this).prev("input.text").val('');
-//        $(this).prev("div").children("input.text").val('');
-//    });
     $(function () {
         $("#tabs").tabs();
     });
-    $(function () {
-        $("#loan_first_payment, #payment_date").datepicker({
-            showOn:"both",
-            buttonImage:"/assets/calendar.png",
-            buttonImageOnly:true,
-            changeMonth:true,
-            changeYear:true,
-            dateFormat:"yy-mm-dd"
-        });
-    });
-    buttonize();
     $('li a[href="#loan_payments"]').click(function () {
         $("#loan_payments").prepend(spinner());
         load("/loans/payments","#loan_payments",true);
@@ -172,14 +168,16 @@ $(document).ready(function () {
     });
     $("#loan_fundamentals input").live("change", function (event) {
         $(".alert-save").addClass("ui-state-error");
-//        load(window.location.href + "/payments","#loan_payments");
         load("/loans/payments","#loan_payments");
         load("/loans/schedule","#loan_schedule");
         load("/loans/summary","#loan_summary");
     });
-//    $("#new-payment").live("click", function (event) {
-//        alert('click');
-//    });
+    $(".delete-payment").live("click", function (event) {
+
+    });
+
+    buttonize();
+    create_calendar();
     create_payment_form();
 });
 

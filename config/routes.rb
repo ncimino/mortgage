@@ -21,7 +21,7 @@ Mortgage::Application.routes.draw do
 
   resources :pages, :only => :show
   resources :loans do
-    resource :payments
+    resources :payments
     #, :shallow => true
   end
 

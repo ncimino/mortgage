@@ -22,7 +22,8 @@
     <td><%= payment.interest %></td>
     <td><%= payment.escrow %></td>
     <td><%= payment.amount %></td>
-    <td><%# link_to 'Delete', [@loan,payment], method: :delete, data: { confirm: 'Are you sure?' }, :class => "delete-button" %></td>
+    <!--<td><button type="button" class="delete-button delete-payment" data-paymentid="<%= payment.id %>">Delete</button></td>-->
+    <td><%# link_to 'Delete', payment, method: :delete, data: { confirm: 'Are you sure?' }, :class => "delete-button", :remote => true %></td>
   </tr>
   <% end %>
   </tbody>

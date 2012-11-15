@@ -21,7 +21,9 @@
       <%= render 'payments' %>
     </div>
   </div>
+  <% if @loan.id %>
   <div id="new-payment-form-container">
     <%= render 'payments/form' %>
   </div>
+  <% end %>
 </div>

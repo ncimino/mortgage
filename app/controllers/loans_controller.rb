@@ -1,5 +1,6 @@
 class LoansController < ApplicationController
   before_filter :authenticate_user!, :except => [:new, :create, :summary, :schedule, :payments]
+  before_filter :set_new_payment
 
   # Special
 
@@ -8,6 +9,10 @@ class LoansController < ApplicationController
   #  @payment = Payment.new
   #  render :partial => "new_payment_form"
   #end
+
+  def set_new_payment
+    @payment = Payment.new
+  end
 
   def summary
     @loan = Loan.new(params[:loan])
@@ -27,15 +32,19 @@ class LoansController < ApplicationController
     elsif params[:loan_id]
       Rails.logger.debug "using loan_id: "+params[:loan_id].to_yaml
       @loan = Loan.find(params[:loan_id])
+    elsif params[:loan][:id]
+      Rails.logger.debug "using loan id: "+params[:loan].to_yaml
+      @loan = Loan.find(params[:loan][:id])
     elsif params[:loan]
       Rails.logger.debug "using loan: "+params[:loan].to_yaml
-      @loan = Loan.find(params[:loan][:id])
+      #@loan = Loan.find(params[:loan][:id])
+      @loan = Loan.new(session[:loan])
     elsif session[:loan]
       Rails.logger.debug "using session: "+session[:loan].to_yaml
       @loan = Loan.new(session[:loan])
-      #else
-    #  Rails.logger.debug "using id: "+params[:id].to_yaml
-    #  @loan = Loan.find(params[:id])
+    #else
+      #Rails.logger.debug "using session: "+session[:loan].to_yaml
+      #@loan = Loan.new
     end
     Rails.logger.debug @loan
     @payments = @loan.payments
