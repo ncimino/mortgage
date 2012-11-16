@@ -7,4 +7,10 @@ class Payment < ActiveRecord::Base
   attr_accessible :amount, :date, :escrow, :interest
 
   belongs_to :loan
+
+  scope :before, proc { |before_date| where("date < ?", before_date) }
+  scope :after, proc { |after_date| where("date >= ?", after_date) }
+  scope :between, proc { |after_date, before_date| where("date >= ? AND date < ?", after_date, before_date) }
+
+  default_scope
 end

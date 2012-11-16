@@ -31,6 +31,10 @@ a {
     font-weight: lighter;
 }
 
+.manually-entered {
+    color: #006400;
+}
+
 #payment_date {
     width: 20em;
 }

@@ -1,0 +1,32 @@
+<% if @schedule %>
+    <table>
+      <thead>
+      <tr>
+        <th></th>
+        <th>Date</th>
+        <th>Total</th>
+        <th>To Principle</th>
+        <th>Interest</th>
+        <th>Escrow</th>
+        <th>Payment</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <% @schedule.each do |line| %>
+          <tr class="<%= line[:class] %>">
+            <td><%= line[:number] %></td>
+            <td><%= line[:date] %></td>
+            <td><b><%= number_to_currency line[:total] %></b></td>
+            <td><%= number_to_currency line[:to_principle] %></td>
+            <td><%= number_to_currency line[:interest] %></td>
+            <td><%= number_to_currency line[:escrow] %></td>
+            <td><b><%= number_to_currency line[:payment] %></b></td>
+          </tr>
+      <% end %>
+      </tbody>
+
+    </table>
+<% else %>
+    <h2>Schedule is not loaded, perhaps you need to enter more data</h2>
+<% end %>

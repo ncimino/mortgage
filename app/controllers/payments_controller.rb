@@ -8,18 +8,22 @@ class PaymentsController < ApplicationController
 
   def new
     @loan = Loan.find(params[:loan_id])
-    @payment = Payment.new
+    #@payment = Payment.new
+    @payment = @loan.payments.last.dup
+    @payment.date = @payment.date + (12 / @loan.payments_per_year).months
     render :partial => "form"
   end
 
   def show
-    @loan = Loan.find(params[:loan_id])
     @payment = Payment.find(params[:id])
+    #@loan = Loan.find(params[:loan_id])
+    @loan = @payment.loan
   end
 
   def edit
-    @loan = Loan.find(params[:loan_id])
     @payment = Payment.find(params[:id])
+    @loan = @payment.loan
+    render :partial => "form"
   end
 
   def create
@@ -51,7 +55,7 @@ class PaymentsController < ApplicationController
     @loan = @payment.loan
     @payments = @loan.payments
     @payment.destroy
-    render :partial => "loans/payments_main"
+    render :partial => "loans/actual_payments"
     #redirect_to loan_url(@payment.loan_id), notice: 'Payment was successfully destroyed.'
     #redirect_to @loan, notice: 'Payment was successfully destroyed.'
   end

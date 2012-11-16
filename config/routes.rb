@@ -13,8 +13,9 @@ Mortgage::Application.routes.draw do
   get 'authentications/destroy'
 
   match '/loans/summary', :via => :get
-  match '/loans/schedule', :via => :get
-  match '/loans/payments_main', :via => :get
+  match '/loans/current_schedule', :via => :get
+  match '/loans/ideal_schedule', :via => :get
+  match '/loans/actual_payments', :via => :get
   match '/auth/failure' => 'authentications#failure'
   match '/auth/:provider/callback' => 'authentications#create'
 

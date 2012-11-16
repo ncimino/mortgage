@@ -1,0 +1,48 @@
+<% if @loan.id %>
+    <div class="prepend-18 span-4 end">
+      <button type="button" class="new-button" title="Create" id="new-payment-button">New Payment</button>
+      <hr class="space" />
+    </div>
+<% else %>
+    <h2>You must save the loan before you can add payments</h2>
+<% end %>
+
+<% if @payments %>
+<table>
+  <thead>
+  <tr>
+    <th>Date</th>
+    <th>Interest</th>
+    <th>Escrow</th>
+    <th>Payment</th>
+    <th></th>
+    <th></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @payments.each do |payment| %>
+  <tr>
+    <td><%= payment.date %></td>
+    <td><%= number_to_currency payment.interest %></td>
+    <td><%= number_to_currency payment.escrow %></td>
+    <td><%= number_to_currency payment.amount %></td>
+    <td>
+      <%= button_to "Delete", { :controller => "payments", :action => "destroy", :id => payment.id }, :remote => true,
+                    :confirm => "Are you sure?", :method => :delete, :form_class => "delete-payment", :id => "delete-payment",
+                    :class => "delete-button" %>
+    </td>
+    <td>
+      <%= button_to "Edit", { :controller => "payments", :action => "edit", :id => payment.id }, :remote => true,
+                    :method => :get, :form_class => "edit-payment", :class => "edit-button", :id => "edit-payment" %>
+    </td>
+
+  </tr>
+  <% end %>
+  </tbody>
+
+</table>
+
+<% else %>
+<h2>Payments are not loaded, perhaps you need to enter more data</h2>
+<% end %>
