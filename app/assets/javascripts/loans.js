@@ -73,6 +73,7 @@ function bind_rails_callbacks() {
             $("#new-payment-form").html( data );
             buttonize();
             create_calendar();
+            new_payment_form();
             $("#new-payment-form").dialog( "open" );
 //            load("/loans/actual_payments","#actual_payments_tab");
         });
@@ -99,15 +100,30 @@ function new_payment_form() {
         modal: true,
         buttons: {
             "Submit": function() {
-                $.post(window.location.href + '/payments', $("#new_payment").serialize(),
-                    function (data) {
-                        $("#new-payment-form").html( data );
-                        buttonize();
-                        create_calendar();
-                        load("/loans/actual_payments","#actual_payments_tab");
-                    }).error(function(req,status,msg) {
-                        $("#new-payment-form").html("<h3 class='error'>An error occurred</h3><h4>"+msg+"</h4>");
-                    });
+//                $.post(window.location.href + '/payments', $("#new_payment").serialize(),
+//                alert($("form.new_payment, form.edit_payment").attr("action"));
+//                $.post($("form.new_payment, form.edit_payment").attr("action"), $("#new_payment").serialize(),
+//                    function (data) {
+//                        $("#new-payment-form").html( data );
+//                        buttonize();
+//                        create_calendar();
+//                        load("/loans/actual_payments","#actual_payments_tab");
+//                        $("#new-payment-form input:first").focus()
+//                    }).error(function(req,status,msg) {
+//                        $("#new-payment-form").html("<h3 class='error'>An error occurred</h3><h4>"+msg+"</h4>");
+//                    });
+                alert($("form.new_payment, form.edit_payment").attr("data-method"));
+                $.ajax({
+                    type: $("form.new_payment, form.edit_payment").attr("data-method"),
+                    url: $("form.new_payment, form.edit_payment").attr("action"),
+                    data: $("#new_payment").serialize()
+                }).done(function( data ) {
+                    $("#new-payment-form").html( data );
+                    buttonize();
+                    create_calendar();
+                    load("/loans/actual_payments","#actual_payments_tab");
+                    $("#new-payment-form input:first").focus()
+                });
             },
             "Done": function() {
                 $( this ).dialog( "close" );
@@ -117,6 +133,14 @@ function new_payment_form() {
             $.get(window.location.href + '/payments/new', function (data) {
                 $("#new-payment-form").html(data)
                 create_calendar();
+            });
+        },
+        open: function() {
+            $("#new-payment-form input:first").focus()
+            $("#new-payment-form").keypress(function(e) {
+                if (e.keyCode == $.ui.keyCode.ENTER) {
+                    $(this).parent().find("button:eq(0)").trigger("click");
+                }
             });
         }
     });

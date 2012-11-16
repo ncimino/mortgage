@@ -6,6 +6,7 @@ gem 'mysql2'
 gem 'devise'
 gem 'activeadmin'
 gem 'jquery-rails'
+#gem 'jquery-ui-rails'
 gem "omniauth"
 gem "omniauth-github"
 gem "omniauth-facebook"

@@ -121,6 +121,8 @@ class LoansController < ApplicationController
   def update
     @loan = current_user.loans.find(params[:id])
     if @loan.update_attributes(params[:loan])
+      @payment = @loan.payments.last.dup
+      @payment.date = @payment.date + (12 / @loan.payments_per_year).months
       flash[:notice] = 'Loan was successfully updated.'
     end
     render "calculator"

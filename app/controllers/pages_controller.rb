@@ -9,17 +9,12 @@ class PagesController < ApplicationController
       @page = Page.find(params[:id])
     end
 
-    respond_to do |format|
+    if @page
       # show.html.erb
-      if @page
-        format.html
-        format.json { render json: @page }
-      else
-        format.html { redirect_to :admin_root }
-        format.json { render json: @page.errors, status: :unprocessable_entity }
-      end
-        
+    else
+      redirect_to :admin_root
     end
+        
   end
 
 end
