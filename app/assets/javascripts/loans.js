@@ -17,26 +17,34 @@ function spinner() {
     return '<h3><img src="/assets/ui-anim_basic_16x16.gif">Loading...</h3>'
 }
 
-function load(path, id,force) {
+function flash(obj) {
+    obj.stop().css("background-color", "#FFFF9C").animate({ backgroundColor:"#FFFFFF"}, 1500);
+}
+
+function load(path, id, force) {
+    console.debug("force: "+force)
+    console.debug("id: "+id)
+    console.debug("(id).hasClass('ui-tabs-hide'): "+$(id).hasClass("ui-tabs-hide"))
     if (force || !$(id).hasClass("ui-tabs-hide")) {
         $.get(path, $("#loan_fundamentals").children("form").serialize(),
             function (data) {
                 $(id).html(data)
-                if (! force) {
-                $("#tabs " + id + " input, #tabs " + id + " table").stop().css("background-color", "#FFFF9C")
-                    .animate({ backgroundColor:"#FFFFFF"}, 1500);
+                if (!force) {
+//                    $("#tabs " + id + " input, #tabs " + id + " table").stop().css("background-color", "#FFFF9C")
+//                        .animate({ backgroundColor:"#FFFFFF"}, 1500);
+                    flash($("#tabs " + id + " input, #tabs " + id + " table"));
                 }
                 bind_rails_callbacks();
                 buttonize();
-            }).error(function(req,status,msg) {
-                $(id).html("<h3 class='error'>An error occurred</h3><h4>"+msg+"</h4>");
+            }).error(function (req, status, msg) {
+                $(id).html("<h3 class='error'>An error occurred</h3><h4>" + msg + "</h4>");
             });
     }
 }
 
 function buttonize() {
     $("button:button").click(function () {
-        if ( $(this).attr('formaction') ) window.location.href = $(this).attr('formaction');
+        if ($(this).attr('formaction')) window.location.href = $(this).attr('formaction');
     });
     $(".back-button").button({
         icons:{ primary:"ui-icon-arrowreturnthick-1-w" }
@@ -53,29 +61,31 @@ function buttonize() {
     $(".delete-button").button({
         icons:{ primary:"ui-icon-trash" }
     });
-    $("#new-payment-button").click(function() {
-        $( "#new-payment-form" ).dialog( "open" );
-    });
 }
 
 function bind_rails_callbacks() {
     $(".delete-payment")
-        .bind("ajax:success", function(event, data, status, xhr) {
+        .bind("ajax:success", function (event, data, status, xhr) {
             $("#actual_payments_tab").html(data);
             bind_rails_callbacks();
             buttonize();
         });
     $(".edit-payment")
-        .bind("ajax:success", function(event, data, status, xhr) {
-//            $("#actual_payments_tab").html(data);
-//            bind_rails_callbacks();
-//            buttonize();
-            $("#new-payment-form").html( data );
+        .bind("ajax:success", function (event, data, status, xhr) {
+            $("#payment-form-container").html(data);
             buttonize();
             create_calendar();
             new_payment_form();
-            $("#new-payment-form").dialog( "open" );
-//            load("/loans/actual_payments","#actual_payments_tab");
+            $("#payment-form-container").dialog("open");
+        });
+    $(".new-payment")
+        .bind("ajax:success", function (event, data, status, xhr) {
+            $("#payment-form-container").html(data);
+            buttonize();
+            create_calendar();
+            new_payment_form();
+            $("#payment-form-container").dialog("open");
+
         });
 }
 
@@ -93,55 +103,54 @@ function create_calendar() {
 }
 
 function new_payment_form() {
-    $( "#new-payment-form" ).dialog({
-        autoOpen: false,
-        height: 355,
-        width: 385,
-        modal: true,
-        buttons: {
-            "Submit": function() {
-//                $.post(window.location.href + '/payments', $("#new_payment").serialize(),
-//                alert($("form.new_payment, form.edit_payment").attr("action"));
-//                $.post($("form.new_payment, form.edit_payment").attr("action"), $("#new_payment").serialize(),
-//                    function (data) {
-//                        $("#new-payment-form").html( data );
-//                        buttonize();
-//                        create_calendar();
-//                        load("/loans/actual_payments","#actual_payments_tab");
-//                        $("#new-payment-form input:first").focus()
-//                    }).error(function(req,status,msg) {
-//                        $("#new-payment-form").html("<h3 class='error'>An error occurred</h3><h4>"+msg+"</h4>");
-//                    });
-                alert($("form.new_payment, form.edit_payment").attr("data-method"));
+    $("#payment-form-container").dialog({
+        autoOpen:false,
+        height:355,
+        width:385,
+        modal:true,
+        title:$("#payment-form-container").children("div").attr("title"),
+        buttons:{
+            "Submit":function () {
                 $.ajax({
-                    type: $("form.new_payment, form.edit_payment").attr("data-method"),
-                    url: $("form.new_payment, form.edit_payment").attr("action"),
-                    data: $("#new_payment").serialize()
-                }).done(function( data ) {
-                    $("#new-payment-form").html( data );
+                    type:$("#payment-form-container form").attr("data-method"),
+                    url:$("#payment-form-container form").attr("action"),
+                    data:$("#payment-form-container form").serialize()
+                }).done(function (data) {
+                    current_id = $("#payment-form-container form").attr("id");
+                    $("#payment-form-container").html(data);
+                    new_id = $("#payment-form-container form").attr("id")
+//                    alert(current_id+" != "+new_id)
+                    if (current_id != new_id) {
+                        $("#payment-form-container").dialog("close");
+                    }
                     buttonize();
                     create_calendar();
-                    load("/loans/actual_payments","#actual_payments_tab");
-                    $("#new-payment-form input:first").focus()
+                    flash($("#payment-form-container input"));
+//                    $("#payment-form-container form input:first").focus()
+                    $("#payment-form-container form input[type='text']:first").focus();
+                    load("/loans/actual_payments", "#actual_payments_tab");
                 });
             },
-            "Done": function() {
-                $( this ).dialog( "close" );
+            "Done":function () {
+                $(this).dialog("close");
             }
         },
-        close: function() {
+        close:function () {
             $.get(window.location.href + '/payments/new', function (data) {
-                $("#new-payment-form").html(data)
+                $("#payment-form-container").html(data)
                 create_calendar();
             });
         },
-        open: function() {
-            $("#new-payment-form input:first").focus()
-            $("#new-payment-form").keypress(function(e) {
-                if (e.keyCode == $.ui.keyCode.ENTER) {
-                    $(this).parent().find("button:eq(0)").trigger("click");
-                }
-            });
+        open:function () {
+//            $("#payment-form-container form input[type='text']:first").focus();
+//            $("#payment-form-container form input:first").focus()
+//            alert($("#payment-form-container div").attr("id"));
+//            $("#payment-form-container input").keypress(function (e) {
+//            $("#new-payment-form").keypress(function (e) {
+//                if (e.keyCode == $.ui.keyCode.ENTER) {
+//                    $(this).parent().find("button:eq(0)").trigger("click");
+//                }
+//            });
         }
     });
 }
@@ -165,31 +174,36 @@ $(document).ready(function () {
     });
     $('li a[href="#actual_payments_tab"]').click(function () {
         $("#actual_payments_tab").prepend(spinner());
-        load("/loans/actual_payments","#actual_payments_tab",true);
+        load("/loans/actual_payments", "#actual_payments_tab", true);
     });
     $('li a[href="#ideal_schedule_tab"]').click(function () {
         $("#ideal_schedule_tab").prepend(spinner());
-        load("/loans/ideal_schedule","#ideal_schedule_tab",true);
+        load("/loans/ideal_schedule", "#ideal_schedule_tab", true);
     });
     $('li a[href="#current_schedule_tab"]').click(function () {
         $("#current_schedule_tab").prepend(spinner());
-        load("/loans/current_schedule","#current_schedule_tab",true);
+        load("/loans/current_schedule", "#current_schedule_tab", true);
     });
     $('li a[href="#summary_tab"]').click(function () {
         $("#summary_tab").prepend(spinner());
-        load("/loans/summary","#summary_tab",true);
+        load("/loans/summary", "#summary_tab", true);
     });
-    $("#loan_fundamentals input").live("change", function (event) {
+    $("#loan_fundamentals input").live("change", function (e) {
         $(".alert-save").addClass("ui-state-error");
-        load("/loans/actual_payments","#actual_payments_tab");
-        load("/loans/current_schedule","#current_schedule_tab");
-        load("/loans/ideal_schedule","#ideal_schedule_tab");
-        load("/loans/summary","#summary_tab");
+        load("/loans/actual_payments", "#actual_payments_tab");
+        load("/loans/current_schedule", "#current_schedule_tab");
+        load("/loans/ideal_schedule", "#ideal_schedule_tab");
+        load("/loans/summary", "#summary_tab");
     });
-    load("/loans/actual_payments","#actual_payments_tab");
-    load("/loans/current_schedule","#current_schedule_tab");
-    load("/loans/ideal_schedule","#ideal_schedule_tab");
-    load("/loans/summary","#summary_tab");
+    $("#payment-form-container").live('keypress', function (e) {
+        if (e.keyCode == $.ui.keyCode.ENTER) {
+            $("#payment-form-container").parent().find("button:eq(0)").trigger("click");
+        }
+    });
+    load("/loans/actual_payments", "#actual_payments_tab");
+    load("/loans/current_schedule", "#current_schedule_tab");
+    load("/loans/ideal_schedule", "#ideal_schedule_tab");
+    load("/loans/summary", "#summary_tab");
     buttonize();
     create_calendar();
     new_payment_form();

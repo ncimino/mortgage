@@ -1,5 +1,6 @@
 <div id="new-payment-form" title="Create Payment" >
-  <%= form_for [@loan, @payment], :url => {:controller => "payments", :action => "create", :loan_id => @loan.id}, :method => :post, :remote => true do |f| %>
+  <%= form_for [@loan, @payment], :url => {:controller => "payments", :action => "create", :loan_id => @loan.id},
+               :html => {'data-method' => :post}, :method => :post, :remote => true do |f| %>
       <%= render 'shared/simple_error_messages', :object => f.object %>
       <div class="field">
         <%= f.label :amount %>

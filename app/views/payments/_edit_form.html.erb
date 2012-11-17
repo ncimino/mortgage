@@ -1,4 +1,4 @@
-<div id="new-payment-form" title="Edit Payment" >
+<div id="payment-form" title="Edit Payment" >
   <%= form_for(@payment, :remote => true, :html => {'data-method' => :put}) do |f| %>
       <%= render 'shared/simple_error_messages', :object => f.object %>
       <div class="field">

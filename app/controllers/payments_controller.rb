@@ -56,8 +56,8 @@ class PaymentsController < ApplicationController
       #flash_now[:notice] = 'Payment was successfully updated.'
       render :partial => "form", notice: 'Payment was successfully updated.'
     else
-      @action = "update"
-      render action: "edit_form"
+      #@action = "update"
+      render :partial => "edit_form"
     end
     #render "calculator"
   end

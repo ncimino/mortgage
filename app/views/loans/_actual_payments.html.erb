@@ -1,6 +1,9 @@
 <% if @loan.id %>
     <div class="prepend-18 span-4 end">
-      <button type="button" class="new-button" title="Create" id="new-payment-button">New Payment</button>
+      <%= button_to "New Payment", { :controller => "payments", :action => "new", :loan_id => @loan.id }, :remote => true,
+                    :form_class => "new-payment", :id => "new-payment", :class => "new-button", :method => :get,
+                    :html => {"data-method" => :get} %>
+      <!--<button type="button" class="new-button" title="Create" id="new-payment-button">New Payment</button>-->
       <hr class="space" />
     </div>
 <% else %>
