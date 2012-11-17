@@ -34,19 +34,20 @@ class LoansController < ApplicationController
   end
 
   def actual_payments
-    if params[:id]
+    #if params[:id]
       #Rails.logger.debug "using id: "+params[:id].to_yaml
-      @loan = Loan.find(params[:id])
-    elsif params[:loan_id]
+      #@loan = Loan.find(params[:id])
+    #elsif params[:loan_id]
       #Rails.logger.debug "using loan_id: "+params[:loan_id].to_yaml
-      @loan = Loan.find(params[:loan_id])
-    elsif params[:loan][:id] #&& !params[:loan][:id].empty?
+      #@loan = Loan.find(params[:loan_id])
+    #els
+    if params[:loan][:id] && !params[:loan][:id].empty?
       #Rails.logger.debug "using loan id: "+params[:loan].to_yaml
       @loan = Loan.find(params[:loan][:id])
     elsif params[:loan]
       #Rails.logger.debug "using loan: "+params[:loan].to_yaml
       #@loan = Loan.find(params[:loan][:id])
-      @loan = Loan.new(session[:loan])
+      @loan = Loan.new(params[:loan])
     elsif session[:loan]
       #Rails.logger.debug "using session: "+session[:loan].to_yaml
       @loan = Loan.new(session[:loan])
@@ -97,25 +98,25 @@ class LoansController < ApplicationController
     render "calculator"
   end
 
-  def edit
-    @loan = current_user.loans.find(params[:id])
-    #@payment = Payment.new
-    @payment = @loan.payments.last.dup
-    #@schedule = @loan.schedule
-    render "calculator"
-  end
+  #def edit
+  #  @loan = current_user.loans.find(params[:id])
+  #  @payment = @loan.payments.last.dup
+  #  render "calculator"
+  #end
 
   def create
     if user_signed_in?
       @loan = current_user.loans.new(params[:loan])
-      flash[:notice] = 'Loan was successfully created.' if @loan.save
-      #render "calculator"
-      redirect_to @loan
-      session[:loan] = nil
+      if @loan.save
+        flash[:notice] = 'Loan was successfully created.'
+        session[:loan] = nil
+      else
+        session[:loan] = params[:loan]
+      end
     else
       session[:loan] = params[:loan]
-      redirect_to user_session_path, notice: 'You must be signed in to save.'
     end
+    render "calculator"
   end
 
   def update

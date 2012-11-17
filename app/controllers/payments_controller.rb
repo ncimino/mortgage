@@ -8,9 +8,17 @@ class PaymentsController < ApplicationController
 
   def new
     @loan = Loan.find(params[:loan_id])
+    #@loan = Loan.find(params[:loan][:id])
     #@payment = Payment.new
-    @payment = @loan.payments.last.dup
-    @payment.date = @payment.date + (12 / @loan.payments_per_year).months
+    if @loan.payments.last
+      @payment = @loan.payments.last.dup
+      @payment.date = @payment.date + (12 / @loan.payments_per_year).months
+    else
+      @payment = @loan.payments.new
+      @payment.date = @loan.first_payment
+      @payment.amount = @loan.planned_payment
+      @payment.escrow = @loan.escrow_payment
+    end
     render :partial => "form"
   end
 
