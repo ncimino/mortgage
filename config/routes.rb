@@ -6,24 +6,38 @@ Mortgage::Application.routes.draw do
   devise_for :users, :controllers => {:registrations => 'registrations'}
 
   get 'sessions/new'
+
   get 'registrations/new'
   get 'registrations/edit'
+
   get 'authentications/index'
   get 'authentications/create'
   get 'authentications/destroy'
 
-  match '/loans/summary', :via => :get
-  match '/loans/current_schedule', :via => :get
-  match '/loans/ideal_schedule', :via => :get
-  match '/loans/actual_payments', :via => :get
+  get 'schedule/ideal'
+  get 'schedule/actual'
+
+  #get 'payments/new'
+  #get 'payments/edit'
+  #get 'payments/destroy'
+  #get 'payments/ideal'
+  get 'payments/actual'
+  get 'payments/session_create'
+  #match 'payments/session_create', :via => :put
+  get 'session_payments/actual'
+
+  get 'loans/summary'
+  get 'loans/save_session'
+
   match '/auth/failure' => 'authentications#failure'
   match '/auth/:provider/callback' => 'authentications#create'
 
   resources :pages, :only => :show
-  resources :loans do
-    resources :payments, :shallow => true
+  resources :session_payments #, :path => "/session/payments"
+  resources :loans, :except => :edit do
+    resources :payments, :except => :index, :shallow => true
   end
 
-  root :to => 'loans#new', :id => 0
+  root :to => 'loans#index'
 
 end

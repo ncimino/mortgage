@@ -57,6 +57,10 @@ nav ul {
     padding: 0 0.5em;
 }
 
+table {
+    border: 1px solid lightgray;
+}
+
 .alt {
     color: #666;
     font-family: "Warnock Pro", "Goudy Old Style","Palatino","Book Antiqua", Georgia, serif;

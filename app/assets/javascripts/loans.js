@@ -13,26 +13,21 @@ function fix_decimal(value, fix_to) {
     return (value == "") ? "" : (value * 1.0).toFixed(fix_to);
 }
 
-function spinner() {
-//    return '<h3 id="spinner"><img src="/assets/ui-anim_basic_16x16.gif">Loading...</h3>'
-    $("#spinner").show();
-}
-
 function flash(obj) {
     obj.stop().css("background-color", "#FFFF9C").animate({ backgroundColor:"#FFFFFF"}, 1500);
 }
 
+function save_session() {
+        $.get("/loans/save_session", $("#loan_fundamentals").children("form").serialize());
+}
+
 function load(path, id, force) {
-    spinner();
+    $("#spinner").show();
     if (force || !$(id).hasClass("ui-tabs-hide")) {
         $.get(path, $("#loan_fundamentals").children("form").serialize(),
             function (data) {
                 $(id).html(data)
-                if (!force) {
-//                    $("#tabs " + id + " input, #tabs " + id + " table").stop().css("background-color", "#FFFF9C")
-//                        .animate({ backgroundColor:"#FFFFFF"}, 1500);
-                    flash($("#tabs " + id + " input, #tabs " + id + " table"));
-                }
+                if (!force) { flash($("#tabs " + id + " input, #tabs " + id + " table")); }
                 bind_rails_callbacks();
                 buttonize();
             }).error(function (req, status, msg) {
@@ -81,7 +76,6 @@ function bind_rails_callbacks() {
         });
     $(".new-payment")
         .bind("ajax:success", function (event, data, status, xhr) {
-//            alert("population dialog");
             $("#payment-form-container").html(data);
             buttonize();
             create_calendar();
@@ -121,38 +115,20 @@ function new_payment_form() {
                     current_id = $("#payment-form-container form").attr("id");
                     $("#payment-form-container").html(data);
                     new_id = $("#payment-form-container form").attr("id")
-//                    alert(current_id+" != "+new_id)
                     if (current_id != new_id) {
                         $("#payment-form-container").dialog("close");
                     }
                     buttonize();
                     create_calendar();
                     flash($("#payment-form-container input"));
-//                    $("#payment-form-container form input:first").focus()
                     $("#payment-form-container form input[type='text']:first").focus();
-                    load("/loans/actual_payments", "#actual_payments_tab");
+                    if ( $("#new_loan").length == 0 ) { load("/payments/actual", "#actual_payments_tab"); }
+                    if ( $("#new_loan").length != 0 ) { load("/session_payments/actual", "#actual_payments_tab"); }
                 });
             },
             "Done":function () {
                 $(this).dialog("close");
             }
-        },
-        close:function () {
-            $.get(window.location.href + '/payments/new', function (data) {
-                $("#payment-form-container").html(data)
-                create_calendar();
-            });
-//        },
-//        open:function () {
-//            $("#payment-form-container form input[type='text']:first").focus();
-//            $("#payment-form-container form input:first").focus()
-//            alert($("#payment-form-container div").attr("id"));
-//            $("#payment-form-container input").keypress(function (e) {
-//            $("#new-payment-form").keypress(function (e) {
-//                if (e.keyCode == $.ui.keyCode.ENTER) {
-//                    $(this).parent().find("button:eq(0)").trigger("click");
-//                }
-//            });
         }
     });
 }
@@ -173,32 +149,38 @@ $(document).ready(function () {
     });
     $(function () {
         $("#tabs").tabs();
-        load("/loans/actual_payments", "#actual_payments_tab");
-        load("/loans/current_schedule", "#current_schedule_tab");
-        load("/loans/ideal_schedule", "#ideal_schedule_tab");
+        if ( $("#new_loan").length == 0 ) { load("/payments/actual", "#actual_payments_tab"); }
+        if ( $("#new_loan").length != 0 ) { load("/session_payments/actual", "#actual_payments_tab"); }
+        load("/schedule/actual", "#current_schedule_tab");
+        load("/schedule/ideal", "#ideal_schedule_tab");
         load("/loans/summary", "#summary_tab");
         buttonize();
         create_calendar();
         new_payment_form();
     });
     $('li a[href="#actual_payments_tab"]').click(function () {
-        load("/loans/actual_payments", "#actual_payments_tab", true);
+        if ( $("#new_loan").length == 0 ) { load("/payments/actual", "#actual_payments_tab", true); }
+        if ( $("#new_loan").length != 0 ) { load("/session_payments/actual", "#actual_payments_tab", true); }
     });
     $('li a[href="#ideal_schedule_tab"]').click(function () {
-        load("/loans/ideal_schedule", "#ideal_schedule_tab", true);
+        load("/schedule/ideal", "#ideal_schedule_tab", true);
     });
     $('li a[href="#current_schedule_tab"]').click(function () {
-        load("/loans/current_schedule", "#current_schedule_tab", true);
+        load("/schedule/actual", "#current_schedule_tab", true);
     });
     $('li a[href="#summary_tab"]').click(function () {
         load("/loans/summary", "#summary_tab", true);
     });
     $("#loan_fundamentals input").live("change", function (e) {
         $(".alert-save").addClass("ui-state-error");
-        load("/loans/actual_payments", "#actual_payments_tab");
-        load("/loans/current_schedule", "#current_schedule_tab");
-        load("/loans/ideal_schedule", "#ideal_schedule_tab");
+        if ( $("#new_loan").length == 0 ) { load("/payments/actual", "#actual_payments_tab"); }
+        if ( $("#new_loan").length != 0 ) { load("/session_payments/actual", "#actual_payments_tab"); }
+        load("/schedule/actual", "#current_schedule_tab");
+        load("/schedule/ideal", "#ideal_schedule_tab");
         load("/loans/summary", "#summary_tab");
+    });
+    $("#new_loan input").live("change", function (e) {
+        save_session();
     });
     $("#payment-form-container").live('keypress', function (e) {
         if (e.keyCode == $.ui.keyCode.ENTER) {

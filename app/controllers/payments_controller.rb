@@ -1,15 +1,15 @@
 class PaymentsController < ApplicationController
-  before_filter :authenticate_user!, :except => [:new, :create, :summary, :schedule, :summary]
+  before_filter :authenticate_user!, :except => [:new, :create, :actual, :session_create]
 
-  def index
-    @loan = Loan.find(params[:loan_id])
-    @payments = Payment.all
+  def actual
+    @loan = Loan.new(params[:loan])
+    @loan.id = params[:loan][:id]
+    @payments = @loan.payments
+    render :partial => "actual"
   end
 
   def new
     @loan = Loan.find(params[:loan_id])
-    #@loan = Loan.find(params[:loan][:id])
-    #@payment = Payment.new
     if @loan.payments.last
       @payment = @loan.payments.last.dup
       @payment.date = @payment.date + (12 / @loan.payments_per_year).months
@@ -19,55 +19,35 @@ class PaymentsController < ApplicationController
       @payment.amount = @loan.planned_payment
       @payment.escrow = @loan.escrow_payment
     end
-    render :partial => "form"
-  end
-
-  def show
-    @payment = Payment.find(params[:id])
-    #@loan = Loan.find(params[:loan_id])
-    @loan = @payment.loan
+    render :partial => "new"
   end
 
   def edit
-    #@action = "update"
-    #@method = :put
     @payment = Payment.find(params[:id])
     @loan = @payment.loan
-    render :partial => "edit_form"
+    render :partial => "edit"
   end
 
   def create
     @loan = Loan.find(params[:loan_id])
     @payment = @loan.payments.build(params[:payment])
     if @payment.save
-      #redirect_to loan_url(@payment.loan_id), notice: 'Payment was successfully created.'
-      #@payment = Payment.new
       @payment = @loan.payments.last.dup
       @payment.date = @payment.date + (12 / @loan.payments_per_year).months
-      #flash_now[:notice] = 'Payment was successfully created.'
-      render :partial => "form", notice: 'Payment was successfully created.'
-    else
-      #render action: "new"
-      render :partial => "form"
     end
+    render :partial => "new"
   end
 
   def update
-    #@loan = Loan.find(params[:loan_id])
     @payment = Payment.find(params[:id])
     @loan = @payment.loan
     if @payment.update_attributes(params[:payment])
-      #redirect_to loan_url(@payment.loan_id), notice: 'Payment was successfully updated.'
-      #@payment = Payment.new
       @payment = @loan.payments.last.dup
       @payment.date = @payment.date + (12 / @loan.payments_per_year).months
-      #flash_now[:notice] = 'Payment was successfully updated.'
-      render :partial => "form", notice: 'Payment was successfully updated.'
+      render :partial => "new", notice: 'Payment was successfully updated.'
     else
-      #@action = "update"
-      render :partial => "edit_form"
+      render :partial => "edit"
     end
-    #render "calculator"
   end
 
   def destroy
@@ -75,8 +55,6 @@ class PaymentsController < ApplicationController
     @loan = @payment.loan
     @payments = @loan.payments
     @payment.destroy
-    render :partial => "loans/actual_payments"
-    #redirect_to loan_url(@payment.loan_id), notice: 'Payment was successfully destroyed.'
-    #redirect_to @loan, notice: 'Payment was successfully destroyed.'
+    render :partial => "loans/payments"
   end
 end

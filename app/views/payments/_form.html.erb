@@ -1,26 +1,21 @@
-<div id="new-payment-form" title="Create Payment" >
-  <%= form_for [@loan, @payment], :url => {:controller => "payments", :action => "create", :loan_id => @loan.id},
-               :html => {'data-method' => :post}, :method => :post, :remote => true do |f| %>
-      <%= render 'shared/simple_error_messages', :object => f.object %>
-      <div class="field">
-        <%= f.label :amount %>
-        <br/>
-        <%= f.text_field :amount, :class => "text", :value => number_with_precision(f.object.amount, :precision => 2) %>
-      </div>
-      <div class="field">
-        <%= f.label :interest %>
-        <br/>
-        <%= f.text_field :interest, :class => "text", :value => number_with_precision(f.object.interest, :precision => 2) %>
-      </div>
-      <div class="field">
-        <%= f.label :escrow %>
-        <br/>
-        <%= f.text_field :escrow, :class => "text", :value => number_with_precision(f.object.escrow, :precision => 2) %>
-      </div>
-      <div class="field">
-        <%= f.label :date %>
-        <br/>
-        <%= f.text_field :date, :class => "text date-picker", :value => number_with_precision(f.object.date, :precision => 2) %>
-      </div>
-  <% end %>
+<%= render 'shared/simple_error_messages', :object => f.object %>
+<div class="field">
+  <%= f.label :amount %>
+  <br/>
+  <%= f.text_field :amount, :class => "text", :value => number_with_precision(f.object.amount, :precision => 2) %>
+</div>
+<div class="field">
+  <%= f.label :interest %>
+  <br/>
+  <%= f.text_field :interest, :class => "text", :value => number_with_precision(f.object.interest, :precision => 2) %>
+</div>
+<div class="field">
+  <%= f.label :escrow %>
+  <br/>
+  <%= f.text_field :escrow, :class => "text", :value => number_with_precision(f.object.escrow, :precision => 2) %>
+</div>
+<div class="field">
+  <%= f.label :date %>
+  <br/>
+  <%= f.text_field :date, :class => "text date-picker", :value => number_with_precision(f.object.date, :precision => 2) %>
 </div>

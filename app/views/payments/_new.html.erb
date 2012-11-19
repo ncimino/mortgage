@@ -1,0 +1,6 @@
+<div id="payment-form" title="Create Payment" >
+  <%= form_for [@loan, @payment], :url => {:controller => "payments", :action => "create", :loan_id => @loan.id},
+               :html => {'data-method' => :post}, :method => :post, :remote => true do |f| %>
+      <%= render 'form', :f => f %>
+  <% end %>
+</div>

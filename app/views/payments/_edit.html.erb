@@ -1,0 +1,5 @@
+<div id="payment-form" title="Edit Payment" >
+  <%= form_for(@payment, :remote => true, :html => {'data-method' => :put}) do |f| %>
+      <%= render 'form', :f => f %>
+  <% end %>
+</div>

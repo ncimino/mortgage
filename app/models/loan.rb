@@ -5,9 +5,10 @@ class Loan < ActiveRecord::Base
   validates_presence_of :asset_price, :down_payment, :escrow_payment, :first_payment, :interest_rate, :payments_per_year, :planned_payment, :years, :name
   validates_numericality_of :asset_price, :down_payment, :escrow_payment, :interest_rate, :payments_per_year, :planned_payment, :years
 
-  attr_accessible :asset_price, :down_payment, :escrow_payment, :first_payment, :interest_rate, :payments_per_year, :planned_payment, :years, :name
+  attr_accessible :asset_price, :down_payment, :escrow_payment, :first_payment, :interest_rate, :payments_per_year, :planned_payment, :years, :name, :payments
 
   belongs_to :user
+  #has_one :schedule
   has_many :payments, :dependent => :destroy, :order => 'date'
 
   # need this?
@@ -80,81 +81,86 @@ class Loan < ActiveRecord::Base
     end
   end
 
-  def schedule_available?
-    loan_amount and actual_payments and planned_payment and rate and escrow_payment and payments_per_year
-  end
-
-  def ideal_schedule
-    if schedule_available?
-      number = 0
-      schedule = [{:number => number, :date => "-", :total => loan_amount, :to_principle => 0, :interest => 0, :payment => 0, :escrow => 0}]
-      date = first_payment - 1.month
-      total = loan_amount
-
-      (1..actual_payments).each do |i|
-        number += 1
-        #interest = number_with_precision(total * rate, :precision => 2)
-        interest = total * rate
-        escrow = escrow_payment
-        total_w_additions = total + interest + escrow
-        payment = (planned_payment > total_w_additions) ? total_w_additions : planned_payment
-        date += (12 / payments_per_year).months
-        to_principle = payment - interest - escrow
-        total -= to_principle
-        schedule += [
-          {:number => number, :date => date, :total => total, :to_principle => to_principle, :interest => interest, :payment => payment, :escrow => escrow}
-        ];
-      end
-      schedule
-    end
-  end
-
-  def current_schedule
-    if schedule_available?
-      number = 0
-      schedule = [{:number => '', :date => '', :total => loan_amount,
-                   :to_principle => 0, :interest => 0, :payment => 0, :escrow => 0}]
-      interest = payments.before(first_payment).sum("interest")
-      escrow = payments.before(first_payment).sum("escrow")
-      payment = payments.before(first_payment).sum("amount")
-      to_principle = payment - interest - escrow
-      total = loan_amount - payment
-      schedule += [{:class => "manually-entered", :number => number, :date => "-", :total => total,
-                   :to_principle => to_principle, :interest => interest, :payment => payment, :escrow => escrow}] if payment > 0
-      date = first_payment
-
-      while 100.0*total.to_int > 0
-        number += 1
-        #interest = number_with_precision(total * rate, :precision => 2)
-        payment = payments.between(date, date + (12 / payments_per_year).months)
-        Rails.logger.debug payment.length
-
-        if payment.length == 0
-          Rails.logger.debug "found entries between #{date} and #{date + (12 / payments_per_year).months}"
-          css_class = ""
-          interest = total * rate
-          escrow = escrow_payment
-          total_w_additions = total + interest + escrow
-          payment = (planned_payment > total_w_additions) ? total_w_additions : planned_payment
-        else
-          Rails.logger.debug "no entries between #{date} and #{date + (12 / payments_per_year).months}"
-          css_class = "manually-entered"
-          interest = payment.sum("interest")
-          escrow = payment.sum("escrow")
-          payment = payment.sum("amount")
-          #total_w_additions = total + interest + escrow
-          #payment = (planned_payment > total_w_additions) ? total_w_additions : planned_payment
-        end
-        to_principle = payment - interest - escrow
-        total -= to_principle
-
-        schedule += [
-            {:class => css_class, :number => number, :date => date, :total => total, :to_principle => to_principle, :interest => interest, :payment => payment, :escrow => escrow}
-        ];
-        date += (12 / payments_per_year).months
-      end
-      schedule
-    end
-  end
+  #def schedule_available?
+  #  loan_amount and actual_payments and planned_payment and rate and escrow_payment and payments_per_year
+  #end
+  #
+  #def ideal_schedule
+  #  if schedule_available?
+  #    number = 0
+  #    schedule = [{:number => number, :date => "-", :total => loan_amount, :to_principle => 0, :interest => 0, :payment => 0, :escrow => 0}]
+  #    date = first_payment - 1.month
+  #    total = loan_amount
+  #
+  #    (1..actual_payments).each do |i|
+  #      number += 1
+  #      #interest = number_with_precision(total * rate, :precision => 2)
+  #      interest = total * rate
+  #      escrow = escrow_payment
+  #      total_w_additions = total + interest + escrow
+  #      payment = (planned_payment > total_w_additions) ? total_w_additions : planned_payment
+  #      date += (12 / payments_per_year).months
+  #      to_principle = payment - interest - escrow
+  #      total -= to_principle
+  #      schedule += [
+  #        {:number => number, :date => date, :total => total, :to_principle => to_principle, :interest => interest, :payment => payment, :escrow => escrow}
+  #      ];
+  #    end
+  #    schedule
+  #  end
+  #end
+  #
+  #def current_schedule(payments_to_add = nil)
+  #  if schedule_available?
+  #    #payments_to_add ||= session_payments_to_add
+  #
+  #    Rails.logger.debug payments_to_add.to_yaml
+  #
+  #    number = 0
+  #    schedule = [{:number => '', :date => '', :total => loan_amount,
+  #                 :to_principle => 0, :interest => 0, :payment => 0, :escrow => 0}]
+  #    interest = payments_to_add.before(first_payment).sum("interest")
+  #    escrow = payments_to_add.before(first_payment).sum("escrow")
+  #    payment = payments_to_add.before(first_payment).sum("amount")
+  #    to_principle = payment - interest - escrow
+  #    total = loan_amount - payment
+  #    schedule += [{:class => "manually-entered", :number => number, :date => "-", :total => total,
+  #                 :to_principle => to_principle, :interest => interest, :payment => payment, :escrow => escrow}] if payment > 0
+  #    date = first_payment
+  #
+  #    while 100.0*total.to_int > 0
+  #      number += 1
+  #      #interest = number_with_precision(total * rate, :precision => 2)
+  #      payment = payments_to_add.between(date, date + (12 / payments_per_year).months)
+  #      #Rails.logger.debug payment.length
+  #
+  #      if payment.length == 0
+  #        #Rails.logger.debug "found entries between #{date} and #{date + (12 / payments_per_year).months}"
+  #        css_class = ""
+  #        interest = total * rate
+  #        escrow = escrow_payment
+  #        total_w_additions = total + interest + escrow
+  #        payment = (planned_payment > total_w_additions) ? total_w_additions : planned_payment
+  #      else
+  #        #Rails.logger.debug "no entries between #{date} and #{date + (12 / payments_per_year).months}"
+  #        css_class = "manually-entered"
+  #        interest = payment.sum("interest")
+  #        escrow = payment.sum("escrow")
+  #        payment = payment.sum("amount")
+  #        #total_w_additions = total + interest + escrow
+  #        #payment = (planned_payment > total_w_additions) ? total_w_additions : planned_payment
+  #      end
+  #      to_principle = payment - interest - escrow
+  #      total -= to_principle
+  #
+  #      schedule += [
+  #          {:class => css_class, :number => number, :date => date, :total => total, :to_principle => to_principle, :interest => interest, :payment => payment, :escrow => escrow}
+  #      ];
+  #      date += (12 / payments_per_year).months
+  #    end
+  #    Rails.logger.debug payments_to_add.to_yaml
+  #    schedule
+  #  end
+  #end
 
 end
