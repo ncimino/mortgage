@@ -13,6 +13,11 @@
 </thead>
 
 <tbody>
+<%- if session[:loan] %>
+    <tr>
+      <td colspan="6"><h4 class="alt"> You have an unsaved loan, click <%= link_to "here", new_loan_path %> to edit it</h4></td>
+    </tr>
+<% end -%>
 <% @loans.each do |loan| %>
   <tr>
     <td><%= link_to loan.name, loan_path(loan), :class => "edit-button" %></td>

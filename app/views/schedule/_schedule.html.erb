@@ -9,6 +9,7 @@
         <th>Interest</th>
         <th>Escrow</th>
         <th>Payment</th>
+        <th></th>
       </tr>
       </thead>
 
@@ -22,6 +23,22 @@
             <td><%= number_to_currency line[:interest] %></td>
             <td><%= number_to_currency line[:escrow] %></td>
             <td><b><%= number_to_currency line[:payment] %></b></td>
+            <td>
+              <%- if line[:class].nil? %>
+              <%- elsif @loan.id.nil? %>
+              <%- elsif line[:class].empty? %>
+              <%= form_tag({:controller => "payments", :action => "new", :loan_id => @loan.id},
+                    :class => 'new-payment', 'data-remote' => :true, 'data-method' => :get, :method => :get,
+                    :id => 'add-payment-' + @loan.id.to_s + '-' + line[:number].to_s) do %>
+                    <input type="hidden" name="payment[amount]" value="<%= line[:payment] %>">
+                    <input type="hidden" name="payment[escrow]" value="<%= line[:escrow] %>">
+                    <input type="hidden" name="payment[interest]" value="<%= line[:interest] %>">
+                    <input type="hidden" name="payment[date]" value="<%= line[:date] %>">
+                  <!--<a href="#">+</a>-->
+                  <button type="submit" class="" id="new-payment-<%= @loan.id.to_s + '-' + line[:number].to_s %>" title="save">+</button>
+              <% end %>
+              <% end -%>
+            </td>
           </tr>
       <% end %>
       </tbody>

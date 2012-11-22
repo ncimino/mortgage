@@ -23,6 +23,7 @@ function save_session() {
 
 function load(path, id, force) {
     $("#spinner").show();
+    $(id).html("");
     if (force || !$(id).hasClass("ui-tabs-hide")) {
         $.get(path, $("#loan_fundamentals").children("form").serialize(),
             function (data) {
@@ -125,6 +126,7 @@ function new_payment_form() {
                     $("#payment-form-container form input[type='text']:first").focus();
                     if ( $("#new_loan").length == 0 ) { load("/payments/actual", "#actual_payments_tab"); }
                     if ( $("#new_loan").length != 0 ) { load("/session_payments/actual", "#actual_payments_tab"); }
+                    load("/schedule/actual", "#current_schedule_tab");
                 });
             },
             "Done":function () {

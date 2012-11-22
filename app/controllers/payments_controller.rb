@@ -10,7 +10,9 @@ class PaymentsController < ApplicationController
 
   def new
     @loan = Loan.find(params[:loan_id])
-    if @loan.payments.last
+    if params[:payment]
+      @payment = @loan.payments.new(params[:payment])
+    elsif @loan.payments.last
       @payment = @loan.payments.last.dup
       @payment.date = @payment.date + (12 / @loan.payments_per_year).months
     else
@@ -55,6 +57,6 @@ class PaymentsController < ApplicationController
     @loan = @payment.loan
     @payments = @loan.payments
     @payment.destroy
-    render :partial => "loans/payments"
+    render :partial => "actual"
   end
 end
