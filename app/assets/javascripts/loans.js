@@ -57,6 +57,7 @@ function buttonize() {
     $(".delete-button").button({
         icons:{ primary:"ui-icon-trash" }
     });
+    $(".button").button();
 }
 
 function bind_rails_callbacks() {
@@ -134,7 +135,8 @@ function new_payment_form() {
 }
 
 $(document).ready(function () {
-    $("#loan_asset_price").focus().change(function () {
+    $(".focus").focus();
+    $("#loan_asset_price").change(function () {
         auto_fill("#loan_down_payment", fix_decimal($(this).val() * 0.2, 2));
         auto_fill("#loan_years", fix_decimal(($(this).val() < 150000) ? "5" : "30"), 0);
     });

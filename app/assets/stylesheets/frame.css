@@ -6,6 +6,11 @@ a {
     border: none;
 }
 
+fieldset, input {
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+
 .box {
     padding: 1.5em;
     margin-bottom: 1.5em;

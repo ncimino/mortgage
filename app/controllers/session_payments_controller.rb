@@ -1,17 +1,30 @@
 class SessionPaymentsController < ApplicationController
+  before_filter :get_loan, :get_payments
+
+  def get_loan
+    @loan = Loan.new(session[:loan])
+  end
+
+  def get_payments
+    @payments = []
+    if session[:payments]
+      session[:payments].each { |p|
+        this_payment = @loan.payments.new(p)
+        this_payment.id = p[:id]
+        @payments << this_payment
+      }
+      @payments.sort! { |a,b| a.date <=> b.date }
+    end
+  end
 
   def actual
-    @loan = Loan.new(session[:loan])
-    @payments = @loan.payments
-    @payments.sort! { |a,b| a.date <=> b.date }
     render :partial => "actual"
   end
 
 
   def new
-    @loan = Loan.new(session[:loan])
     if @loan.payments.last
-      @payment = @loan.payments.last.dup
+      @payment = @payments.last.dup
       @payment.date = @payment.date + (12 / @loan.payments_per_year).months
     else
       @payment = @loan.payments.new
@@ -23,32 +36,30 @@ class SessionPaymentsController < ApplicationController
   end
 
   def edit
-    @loan = Loan.new(session[:loan])
-    @payment = session[:loan][:payments].select { |payment| payment.id == params[:id].to_i }
+    @payment = @loan.payments.new(session[:payments].select { |payment| payment[:id] == params[:id].to_i })
     render :partial => "edit"
   end
 
   def create
-    @loan = Loan.new(session[:loan])
-    @payment = @loan.payments.new(params[:payment])
-    session[:loan][:payments] ||= []
-    @payment.id = session[:loan][:payments].last.nil? ? 1 : session[:loan][:payments].last.id + 1
+    p = params[:payment]
+    p[:id] = @payments.last.nil? ? 1 : @payments.last.id + 1
+    @payment = @loan.payments.new(p)
     if @payment.valid?
-      session[:loan][:payments] ||= []
-      session[:loan][:payments] << @payment
-      @payment = @loan.payments.last.dup
+      session[:payments] ||= []
+      session[:payments] << p
+      get_payments
+      @payment = @payments.last.dup
       @payment.date = @payment.date + (12 / @loan.payments_per_year).months
     end
     render :partial => "new"
   end
 
   def update
-    @loan = Loan.new(session[:loan])
     @payment = @loan.payments.new(params[:payment])
-    @payment.id = session[:loan][:payments].last.id + 1
+    params[:payment][:id] = @payments.last.nil? ? 1 : @payments.last.id + 1
     if @payment.valid?
-      session[:loan][:payments].delete_if { |payment| payment.id == params[:id].to_i }
-      session[:loan][:payments] << @payment
+      session[:payments].delete_if { |payment| payment[:id] == params[:id].to_i }
+      session[:payments] << params[:payment]
       @payment = @loan.payments.last.dup
       @payment.date = @payment.date + (12 / @loan.payments_per_year).months
       render :partial => "new", notice: 'Payment was successfully updated.'
@@ -58,10 +69,9 @@ class SessionPaymentsController < ApplicationController
   end
 
   def destroy
-    @loan = Loan.new(session[:loan])
-    @payment = @loan.payments.new(params[:payment])
-    session[:loan][:payments].delete_if { |payment| payment.id == params[:id].to_i }
-    @payments = session[:loan][:payments]
+    Rails.logger.debug session[:payments].to_yaml
+    session[:payments].delete_if { |payment| payment[:id] == params[:id].to_i }
+    get_payments
     render :partial => "actual"
   end
 end

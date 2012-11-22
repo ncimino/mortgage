@@ -1,5 +1,8 @@
-<div id="payment-form" title="Create Payment" >
-  <%= form_for(@payment, :url => {:controller => :session_payments, :action => :update}, :remote => true, :html => {'data-method' => :put}) do |f| %>
+<div id="payment-form" title="Update Payment" >
+  <%= form_for(@payment,
+               :url => {:controller => "session_payments", :action => "update"},
+               :html => {'data-method' => :put, :method => :put, :remote => true, :class => "edit_payment",
+                         :id => "edit_payment"}) do |f| %>
       <%= render 'payments/form', :f => f %>
   <% end %>
 </div>

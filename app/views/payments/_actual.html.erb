@@ -28,10 +28,6 @@
             <td><%= number_to_currency payment.escrow %></td>
             <td><%= number_to_currency payment.amount %></td>
             <td>
-              <%# button_to "Delete", { :controller => "payments", :action => "destroy", :id => payment.id }, :remote => true,
-                    :confirm => "Are you sure?", :method => :delete, :form_class => "delete-payment",
-                    :id => "delete-payment-"+payment.id.to_s,
-                    :class => "delete-button" %>
               <form action='<%= url_for :controller => "payments", :action => "destroy", :id => payment.id %>'
                     class='delete-payment' data-remote='true' data-remote='delete' method='delete'>
                 <div>
@@ -41,9 +37,6 @@
               </div>
             </td>
             <td>
-              <%# button_to "Edit", { :controller => "payments", :action => "edit", :id => payment.id }, :remote => true,
-                    :method => :get, :form_class => "edit-payment", :class => "edit-button",
-                    :id => "edit-payment-"+payment.id.to_s %>
               <form action='<%= url_for :controller => "payments", :action => "edit", :id => payment.id %>'
                     class='edit-payment' data-remote='true' data-remote='get' method='get'>
                 <div>
@@ -59,5 +52,5 @@
     </table>
 
 <% else %>
-    <h2>Payments are not loaded, perhaps you need to enter more data</h2>
+    <h2 class="alt">Add a payment</h2>
 <% end %>

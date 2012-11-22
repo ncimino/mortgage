@@ -3,7 +3,12 @@ class LoansController < ApplicationController
                                                  :save_session, :current_schedule]
 
   def save_session
+    #params[:loan][:payments] = session[:loan][:payments] if session[:loan]
+    #payments = session[:loan][:payments] if session[:loan]
+    #session[:payments] = params[:payments]
     session[:loan] = params[:loan]
+    session[:payments] ||= []
+    #session[:loan][:payments] = payments if payments
     render :nothing => true
   end
 
@@ -21,8 +26,10 @@ class LoansController < ApplicationController
   end
 
   def new
+    #reset_session
     if session[:loan]
       @loan = Loan.new(session[:loan])
+      #@loan = Loan.new(params[:loan])
     else
       @loan = Loan.new
       @loan.payments_per_year = 12
@@ -49,15 +56,58 @@ class LoansController < ApplicationController
   def create
     if user_signed_in?
       @loan = current_user.loans.new(params[:loan])
-      if @loan.save
-        #if params[:loan][:payments]
-        #  @loan.payments.save
-        #end
-        flash[:notice] = 'Loan was successfully created.'
-        session[:loan] = nil
-      else
-        session[:loan] = params[:loan]
-      end
+      @payments = []
+
+      #if @loan.save
+        if session[:payments]
+          #Rails.logger.debug session[:payments].to_yaml
+
+          #@loan.payments = session[:payments]
+          #@payments.save
+
+          #@payments = session[:payments].collect { |payment| @loan.payments.new(:payments => payment).save }
+
+          #@payments = session[:payments].collect { |payment| @loan.payments.new(payment) }
+          #if @payments.all?(&:valid?)
+          #  @payments.each(&:save!)
+          #end
+
+          #@payments = session[:payments].collect { |payment|
+          #  new_payment = Payment.new(payment)
+          #  new_payment.loan_id = @loan.id
+          #  new_payment.save
+          #}
+
+        session[:payments].each { |payment|
+            #new_payment = @loan.payments.new()
+            #Rails.logger.debug new_payment.to_yaml
+            #new_payment.attributes = payment
+            Rails.logger.debug payment.to_yaml
+            #Rails.logger.debug new_payment.to_yaml
+            #@payments << new_payment
+
+            #@payments << @loan.payments.new(payment)
+
+            #Rails.logger.debug @payments.to_yaml
+
+            @loan.payments.new(payment)
+          }
+
+        end
+
+        if @loan.valid? && @payments.all?(&:valid?)
+          @loan.save!
+          @payments.each(&:save!)
+          flash[:notice] = 'Loan was successfully created.'
+          session[:loan] = nil
+          session[:payments] = nil
+        else
+          session[:loan] = params[:loan]
+        end
+
+      #else
+      #  session[:loan] = params[:loan]
+      #end
       render "calculator"
     else
       session[:loan] = params[:loan]
