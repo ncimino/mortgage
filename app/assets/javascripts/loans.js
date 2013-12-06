@@ -175,7 +175,7 @@ $(document).ready(function () {
     $('li a[href="#summary_tab"]').click(function () {
         load("/loans/summary", "#summary_tab", true);
     });
-    $("#loan_fundamentals input").live("change", function (e) {
+    $("#loan_fundamentals input").bind("change", function (e) {
         $(".alert-save").addClass("ui-state-error");
         if ( $("#new_loan").length == 0 ) { load("/payments/actual", "#actual_payments_tab"); }
         if ( $("#new_loan").length != 0 ) { load("/session_payments/actual", "#actual_payments_tab"); }
@@ -183,10 +183,10 @@ $(document).ready(function () {
         load("/schedule/ideal", "#ideal_schedule_tab");
         load("/loans/summary", "#summary_tab");
     });
-    $("#new_loan input").live("change", function (e) {
+    $("#new_loan input").bind("change", function (e) {
         save_session();
     });
-    $("#payment-form-container").live('keypress', function (e) {
+    $("#payment-form-container").bind('keypress', function (e) {
         if (e.keyCode == $.ui.keyCode.ENTER) {
             $("#payment-form-container").parent().find("button:eq(0)").trigger("click");
         }
